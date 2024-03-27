@@ -6,7 +6,7 @@ namespace EventsWebService.Infrastructure
 {
     public class MessageSender
     {
-        public void Send(object messageBody, string eventType)
+        public void Send(object payload, string eventType)
         {
             var factory = new ConnectionFactory()
             {
@@ -20,7 +20,7 @@ namespace EventsWebService.Infrastructure
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                string message = JsonConvert.SerializeObject(messageBody);
+                string message = JsonConvert.SerializeObject(new EventMessage { Type = eventType, Data = payload });
                 var body = Encoding.UTF8.GetBytes(message);
 
                 var properties = channel.CreateBasicProperties();

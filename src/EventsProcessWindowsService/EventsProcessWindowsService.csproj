@@ -91,7 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\EventMessageDto.cs" />
+    <Compile Include="Contracts\EventType.cs" />
+    <Compile Include="Contracts\FileDownloadDto.cs" />
+    <Compile Include="Contracts\UserLoginDto.cs" />
     <Compile Include="Db\DataObjects\FileDownloadEvent.cs" />
+    <Compile Include="Db\DataObjects\UserLoginEvent.cs" />
     <Compile Include="Db\EventsContext.cs" />
     <Compile Include="Db\EventsRepository.cs" />
     <Compile Include="EventsProcessorService.cs">

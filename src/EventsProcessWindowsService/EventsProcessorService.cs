@@ -1,10 +1,11 @@
-﻿using EventsProcessWindowsService.Db;
+﻿using EventsProcessWindowsService.Contracts;
+using EventsProcessWindowsService.Db;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.ServiceProcess;
 using System.Text;
-using System.Threading;
 
 namespace EventsProcessWindowsService
 {
@@ -37,14 +38,39 @@ namespace EventsProcessWindowsService
             consumer.Received += (model, ea) =>
             {
                 string messageBody = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var receivedEvent = JsonConvert.DeserializeObject<EventMessageDto>(messageBody);
 
-                // Dowork
-                Thread.Sleep(1000);
-
-                using (EventsContext db = new EventsContext())
+                switch (receivedEvent.Type)
                 {
-                    db.FileDownloads.Add(new Db.DataObjects.FileDownloadEvent { EventId = "sad", Date = "sad", FileLenght = 4, FileName = "23" });
-                    db.SaveChanges();
+                    case EventType.FileDownload:
+                        var fileDownloadEvent = JsonConvert.DeserializeObject<FileDownloadDto>(receivedEvent.Data.ToString());
+                        using (EventsContext db = new EventsContext())
+                        {
+                            db.FileDownloads.Add(new Db.DataObjects.FileDownloadEvent 
+                                { 
+                                    EventId = fileDownloadEvent.Id.ToString(), 
+                                    Date = fileDownloadEvent.Date.ToLongDateString(), 
+                                    FileLenght = fileDownloadEvent.FileLenght, 
+                                    FileName = fileDownloadEvent.FileName
+                            });
+                            db.SaveChanges();
+                        }
+                        break;
+                    case EventType.UserLogin:
+                        var userLoginEvent = JsonConvert.DeserializeObject<UserLoginDto>(receivedEvent.Data.ToString());
+                        using (EventsContext db = new EventsContext())
+                        {
+                            db.UserLogins.Add(new Db.DataObjects.UserLoginEvent
+                            {
+                                Date = userLoginEvent.Date.ToLongDateString(),
+                                Email = userLoginEvent.Email,
+                                UserId = userLoginEvent.UserId.ToString()
+                            });
+                            db.SaveChanges();
+                        }
+                        break;
+                    default:
+                        break;
                 }
             };
 
