@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using EventsProcessWindowsService.Db;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.ServiceProcess;
@@ -39,6 +40,12 @@ namespace EventsProcessWindowsService
 
                 // Dowork
                 Thread.Sleep(1000);
+
+                using (EventsContext db = new EventsContext())
+                {
+                    db.FileDownloads.Add(new Db.DataObjects.FileDownloadEvent { EventId = "sad", Date = "sad", FileLenght = 4, FileName = "23" });
+                    db.SaveChanges();
+                }
             };
 
             channel.BasicConsume(queue: "eventsQueue",
