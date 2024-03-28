@@ -75,6 +75,11 @@ namespace EventsProcessWindowsService
                         {
                             var userData = db.UserLogins.Where(x => x.Email.Equals(receivedEvent.Data.ToString(), StringComparison.InvariantCultureIgnoreCase));
                             db.UserLogins.RemoveRange(userData);
+                            var user = db.Users.FirstOrDefault(x => x.UserEmail == receivedEvent.Data.ToString());
+                            if (user != null)
+                            {
+                                db.Users.Remove(user);
+                            }
                             db.SaveChanges();
                         }
                         break;
@@ -123,6 +128,18 @@ namespace EventsProcessWindowsService
                                 ProductName = productUninstalledEvent.ProductName,
                                 ProductVersion = productUninstalledEvent.ProductVersion,
                                 ActionType = "Uninstalation"
+                            });
+                            db.SaveChanges();
+                        }
+                        break;
+                    case MessageType.UserLogout:
+                        var userLogoutEvent = JsonConvert.DeserializeObject<UserLoginDto>(receivedEvent.Data.ToString());
+                        using (EventsContext db = new EventsContext())
+                        {
+                            db.UserLogouts.Add(new Db.DataObjects.UserLogOutEvent
+                            {
+                                LogoutTime = userLogoutEvent.Date.ToUniversalTime().ToString(),
+                                Email = userLogoutEvent.Email
                             });
                             db.SaveChanges();
                         }

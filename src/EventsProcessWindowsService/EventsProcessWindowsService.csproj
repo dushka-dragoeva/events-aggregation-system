@@ -101,6 +101,7 @@
     <Compile Include="Db\DataObjects\FileDownloadEvent.cs" />
     <Compile Include="Db\DataObjects\ProductActionTraking.cs" />
     <Compile Include="Db\DataObjects\User.cs" />
+    <Compile Include="Db\DataObjects\UserLogOutEvent.cs" />
     <Compile Include="Db\DataObjects\UserLoginEvent.cs" />
     <Compile Include="Db\EventsContext.cs" />
     <Compile Include="Db\EventsRepository.cs" />

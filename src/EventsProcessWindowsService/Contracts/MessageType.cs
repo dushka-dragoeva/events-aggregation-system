@@ -7,6 +7,7 @@
         UserDelete,
         UserRegistered,
         ProductInstalled,
-        ProductUninstalled
+        ProductUninstalled,
+        UserLogout
     }
 }

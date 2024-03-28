@@ -13,6 +13,7 @@ namespace EventsProcessWindowsService.Db
 
         public DbSet<FileDownloadEvent> FileDownloads { get; set; }
         public DbSet<UserLoginEvent> UserLogins { get; set; }
+        public DbSet<UserLogOutEvent> UserLogouts { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ProductActionTraking> ProductActions { get; set; }
 
