@@ -1,5 +1,6 @@
 ﻿using EventsWebService.Dtos;
 using EventsWebService.Infrastructure;
+using EventsWebService.Security;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -11,6 +12,7 @@ namespace EventsWebService.Controllers
     {
         [HttpPost]
         [Route("create")]
+        [ApiKey]
         public ActionResult Post([FromQuery]EventType type, [FromBody]object content)
         {
             if (content == null)
@@ -80,6 +82,7 @@ namespace EventsWebService.Controllers
 
         [HttpDelete]
         [Route("gdpr")]
+        [ApiKey]
         public ActionResult DeleteUserData(string userEmail)
         {
             new MessageSender().SendUserDelete(userEmail);

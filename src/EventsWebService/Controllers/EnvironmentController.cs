@@ -12,7 +12,7 @@ namespace EventsWebService.Controllers
             var environmentDto = new
             {
                 GtmId = "GTM-K5N5LX",
-                SupportedEvents = new[] { "FileDownload", "UserLogin" }
+                SupportedEvents = new[] { "FileDownload", "UserLogin", "UserRegistered", "UserLogout", "ProductInstalled", "ProductUninstalled", "InvoiceCreated" }
             };
 
             return this.Ok(environmentDto);
