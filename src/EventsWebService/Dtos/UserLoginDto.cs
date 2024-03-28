@@ -11,6 +11,10 @@ namespace EventsWebService.Dtos
 
         public Guid? UserId { get; set; }
 
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
         public string[] Validate()
         {
             List<string> errors = new List<string>();

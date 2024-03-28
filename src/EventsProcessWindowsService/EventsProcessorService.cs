@@ -78,6 +78,25 @@ namespace EventsProcessWindowsService
                             db.SaveChanges();
                         }
                         break;
+                    case MessageType.UserRegistered:
+                        using (EventsContext db = new EventsContext())
+                        {
+                            var userRegistered = JsonConvert.DeserializeObject<UserRegisteredDto>(receivedEvent.Data.ToString());
+                            var user = db.Users.FirstOrDefault(x => x.UserEmail.Equals(userRegistered.Email, StringComparison.InvariantCultureIgnoreCase));
+                            if (user == null)
+                            {
+                                db.Users.Add(new Db.DataObjects.User
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    UserName = $"{userRegistered.FirstName} {userRegistered.LastName}",
+                                    UserEmail = userRegistered.Email,
+                                    UserCompanyName = userRegistered.Company,
+                                    DateRegistered = DateTime.UtcNow.ToString()
+                                });
+                                db.SaveChanges();
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }

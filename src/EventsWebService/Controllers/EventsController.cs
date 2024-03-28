@@ -38,6 +38,13 @@ namespace EventsWebService.Controllers
                             return this.BadRequest(result1);
                         }
                         break;
+                    case EventType.UserRegistered:
+                        var result2 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserRegisteredDto>(content.ToString()), type.ToString());
+                        if (result2.Length > 0)
+                        {
+                            return this.BadRequest(result2);
+                        }
+                        break;
                     default:
                         break;
                 }
