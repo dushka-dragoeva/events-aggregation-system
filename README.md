@@ -1,5 +1,8 @@
 # events-aggregation-system
 
+Reqirements:
+Windows, VisualStudio 2022, .net 8 SDK, .netFramework 4.8 SDK
+
 How to run the project:
 
 - Download and install
@@ -7,7 +10,7 @@ How to run the project:
     - latest RabbitMq service from https://www.rabbitmq.com/docs/install-windows
 
 - Enable Management plugin from this documentation - https://www.rabbitmq.com/docs/management
-- Login and upload new broker definitions using the file - rabbit_definitions.json from this repo
+- Login at http://localhost:15672/#/ and upload new broker definitions using the file - rabbit_definitions.json from this repo
 
 - Install windows service
     - Open src/All.sln in VisualStudio and build it.
