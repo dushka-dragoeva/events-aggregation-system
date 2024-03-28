@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EventsWebService.Dtos;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
 
@@ -6,8 +7,14 @@ namespace EventsWebService.Infrastructure
 {
     public class MessageSender
     {
-        public void Send(object payload, string eventType)
+        public string[] Send(IEventDto payload, string eventType)
         {
+            var validationresult = payload.Validate();
+            if (payload.Validate().Length > 0)
+            {
+                return validationresult;
+            }
+
             var factory = new ConnectionFactory()
             {
                 HostName = "localhost",
@@ -32,6 +39,8 @@ namespace EventsWebService.Infrastructure
                                      basicProperties: properties,
                                      body: body);
             }
+
+            return new string[] { };
         }
     }
 }

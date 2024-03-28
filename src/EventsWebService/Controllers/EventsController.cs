@@ -13,21 +13,41 @@ namespace EventsWebService.Controllers
         [Route("create")]
         public ActionResult Post([FromQuery]EventType type, [FromBody]object content)
         {
-            switch (type)
+            if (content == null)
             {
-                case EventType.None:
-                    return this.BadRequest("Invalid type");
-                case EventType.FileDownload:
-                    new MessageSender().Send(JsonConvert.DeserializeObject<FileDownloadDto>(content.ToString()), type.ToString());
-                    break;
-                case EventType.UserLogin:
-                    new MessageSender().Send(JsonConvert.DeserializeObject<UserLoginDto>(content.ToString()), type.ToString());
-                    break;
-                default:
-                    break;
+                return this.BadRequest("Body can not be null.");
             }
 
-            return this.Ok("Success");
+            try
+            {
+                switch (type)
+                {
+                    case EventType.None:
+                        return this.BadRequest("Invalid type");
+                    case EventType.FileDownload:
+                        var result = new MessageSender().Send(JsonConvert.DeserializeObject<FileDownloadDto>(content.ToString()), type.ToString());
+                        if (result.Length > 0)
+                        {
+                            return this.BadRequest(result);
+                        }
+                        break;
+                    case EventType.UserLogin:
+                        var result1 = new MessageSender().Send(JsonConvert.DeserializeObject<UserLoginDto>(content.ToString()), type.ToString());
+                        if (result1.Length > 0)
+                        {
+                            return this.BadRequest(result1);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new { Error = "Unexpected error.", Message = ex.Message });
+            }
+
+            return this.Ok(new { Status = "Event processed successfully", Time = DateTime.UtcNow, ReferenseId = Guid.NewGuid() });
         }
     }
 }
