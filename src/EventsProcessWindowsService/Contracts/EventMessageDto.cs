@@ -2,7 +2,7 @@
 {
     public class EventMessageDto
     {
-        public EventType Type { get; set; }
+        public MessageType Type { get; set; }
 
         public object Data { get; set; }
     }

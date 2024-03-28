@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 
@@ -42,7 +43,7 @@ namespace EventsProcessWindowsService
 
                 switch (receivedEvent.Type)
                 {
-                    case EventType.FileDownload:
+                    case MessageType.FileDownload:
                         var fileDownloadEvent = JsonConvert.DeserializeObject<FileDownloadDto>(receivedEvent.Data.ToString());
                         using (EventsContext db = new EventsContext())
                         {
@@ -56,7 +57,7 @@ namespace EventsProcessWindowsService
                             db.SaveChanges();
                         }
                         break;
-                    case EventType.UserLogin:
+                    case MessageType.UserLogin:
                         var userLoginEvent = JsonConvert.DeserializeObject<UserLoginDto>(receivedEvent.Data.ToString());
                         using (EventsContext db = new EventsContext())
                         {
@@ -66,6 +67,14 @@ namespace EventsProcessWindowsService
                                 Email = userLoginEvent.Email,
                                 UserId = userLoginEvent.UserId.ToString()
                             });
+                            db.SaveChanges();
+                        }
+                        break;
+                    case MessageType.UserDelete:
+                        using (EventsContext db = new EventsContext())
+                        {
+                            var userData = db.UserLogins.Where(x => x.Email.Equals(receivedEvent.Data.ToString(), StringComparison.InvariantCultureIgnoreCase));
+                            db.UserLogins.RemoveRange(userData);
                             db.SaveChanges();
                         }
                         break;

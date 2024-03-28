@@ -25,14 +25,14 @@ namespace EventsWebService.Controllers
                     case EventType.None:
                         return this.BadRequest("Invalid type");
                     case EventType.FileDownload:
-                        var result = new MessageSender().Send(JsonConvert.DeserializeObject<FileDownloadDto>(content.ToString()), type.ToString());
+                        var result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<FileDownloadDto>(content.ToString()), type.ToString());
                         if (result.Length > 0)
                         {
                             return this.BadRequest(result);
                         }
                         break;
                     case EventType.UserLogin:
-                        var result1 = new MessageSender().Send(JsonConvert.DeserializeObject<UserLoginDto>(content.ToString()), type.ToString());
+                        var result1 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserLoginDto>(content.ToString()), type.ToString());
                         if (result1.Length > 0)
                         {
                             return this.BadRequest(result1);
@@ -48,6 +48,15 @@ namespace EventsWebService.Controllers
             }
 
             return this.Ok(new { Status = "Event processed successfully", Time = DateTime.UtcNow, ReferenseId = Guid.NewGuid() });
+        }
+
+        [HttpDelete]
+        [Route("gdpr")]
+        public ActionResult DeleteUserData(string userEmail)
+        {
+            new MessageSender().SendUserDelete(userEmail);
+
+            return this.Ok(new { Status = "User data deleted successfully" });
         }
     }
 }

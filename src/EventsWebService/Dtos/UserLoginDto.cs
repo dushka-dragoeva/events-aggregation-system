@@ -25,7 +25,7 @@ namespace EventsWebService.Dtos
                 errors.Add("Email is required.");
             }
 
-            if (!string.IsNullOrEmpty(this.Email) && Regex.IsMatch(this.Email, RegexPatterns.EmailRegex))
+            if (!(!string.IsNullOrEmpty(this.Email) && Regex.IsMatch(this.Email, RegexPatterns.EmailRegex)))
             {
                 errors.Add("Incorrect email format.");
             }

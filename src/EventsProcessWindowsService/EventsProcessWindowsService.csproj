@@ -92,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\EventMessageDto.cs" />
-    <Compile Include="Contracts\EventType.cs" />
+    <Compile Include="Contracts\MessageType.cs" />
     <Compile Include="Contracts\FileDownloadDto.cs" />
     <Compile Include="Contracts\UserLoginDto.cs" />
     <Compile Include="Db\DataObjects\FileDownloadEvent.cs" />
