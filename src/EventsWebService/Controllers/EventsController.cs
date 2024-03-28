@@ -45,6 +45,20 @@ namespace EventsWebService.Controllers
                             return this.BadRequest(result2);
                         }
                         break;
+                    case EventType.ProductInstalled:
+                        var result3 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<ProductInstalledDto>(content.ToString()), type.ToString());
+                        if (result3.Length > 0)
+                        {
+                            return this.BadRequest(result3);
+                        }
+                        break;
+                    case EventType.ProductUninstalled:
+                        var result4 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<ProductUninstalledDto>(content.ToString()), type.ToString());
+                        if (result4.Length > 0)
+                        {
+                            return this.BadRequest(result4);
+                        }
+                        break;
                     default:
                         break;
                 }

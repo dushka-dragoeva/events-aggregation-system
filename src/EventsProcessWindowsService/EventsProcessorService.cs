@@ -97,6 +97,36 @@ namespace EventsProcessWindowsService
                             }
                         }
                         break;
+                    case MessageType.ProductInstalled:
+                        var productInstalledEvent = JsonConvert.DeserializeObject<ProductInstalledDto>(receivedEvent.Data.ToString());
+                        using (EventsContext db = new EventsContext())
+                        {
+                            db.ProductActions.Add(new Db.DataObjects.ProductActionTraking
+                            {
+                                Date = productInstalledEvent.Date.ToShortDateString(),
+                                UserId = productInstalledEvent.UserId.ToString(),
+                                ProductName = productInstalledEvent.ProductName,
+                                ProductVersion = productInstalledEvent.ProductVersion,
+                                ActionType = "Instalation"
+                            });
+                            db.SaveChanges();
+                        }
+                        break;
+                    case MessageType.ProductUninstalled:
+                        var productUninstalledEvent = JsonConvert.DeserializeObject<ProductUninstalledDto>(receivedEvent.Data.ToString());
+                        using (EventsContext db = new EventsContext())
+                        {
+                            db.ProductActions.Add(new Db.DataObjects.ProductActionTraking
+                            {
+                                Date = productUninstalledEvent.Date.ToShortDateString(),
+                                UserId = productUninstalledEvent.UserId.ToString(),
+                                ProductName = productUninstalledEvent.ProductName,
+                                ProductVersion = productUninstalledEvent.ProductVersion,
+                                ActionType = "Uninstalation"
+                            });
+                            db.SaveChanges();
+                        }
+                        break;
                     default:
                         break;
                 }

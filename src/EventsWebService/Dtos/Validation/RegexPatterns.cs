@@ -9,5 +9,8 @@
         public const string CompanyNameRegex = @"^(?=.*\S)[^<>]+$";
 
         public const string PhoneRegex = @"^[a-zA-Z0-9#()\-\+\.\/\*\,\s]*$";
+
+        public const string ProductVersionRegex = @"^(\d+\.)?(\d+\.)?(\*|\d+)$";
+
     }
 }

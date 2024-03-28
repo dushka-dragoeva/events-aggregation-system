@@ -94,9 +94,12 @@
     <Compile Include="Contracts\EventMessageDto.cs" />
     <Compile Include="Contracts\MessageType.cs" />
     <Compile Include="Contracts\FileDownloadDto.cs" />
+    <Compile Include="Contracts\ProductInstalledDto.cs" />
+    <Compile Include="Contracts\ProductUninstalledDto.cs" />
     <Compile Include="Contracts\UserLoginDto.cs" />
     <Compile Include="Contracts\UserRegisteredDto.cs" />
     <Compile Include="Db\DataObjects\FileDownloadEvent.cs" />
+    <Compile Include="Db\DataObjects\ProductActionTraking.cs" />
     <Compile Include="Db\DataObjects\User.cs" />
     <Compile Include="Db\DataObjects\UserLoginEvent.cs" />
     <Compile Include="Db\EventsContext.cs" />

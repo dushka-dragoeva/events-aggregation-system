@@ -5,6 +5,8 @@
         FileDownload,
         UserLogin,
         UserDelete,
-        UserRegistered
+        UserRegistered,
+        ProductInstalled,
+        ProductUninstalled
     }
 }
