@@ -20,52 +20,53 @@ namespace EventsWebService.Controllers
                 return this.BadRequest("Body can not be null.");
             }
 
+            string[] result;
             try
             {
                 switch (type)
                 {
                     case EventType.None:
-                        return this.BadRequest("Invalid type");
+                        return this.BadRequest("Invalid type!");
                     case EventType.FileDownload:
-                        var result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<FileDownloadDto>(content.ToString()), type.ToString());
+                        result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<FileDownloadDto>(content.ToString()), type.ToString());
                         if (result.Length > 0)
                         {
                             return this.BadRequest(result);
                         }
                         break;
                     case EventType.UserLogin:
-                        var result1 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserLoginDto>(content.ToString()), type.ToString());
-                        if (result1.Length > 0)
+                        result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserLoginDto>(content.ToString()), type.ToString());
+                        if (result.Length > 0)
                         {
-                            return this.BadRequest(result1);
+                            return this.BadRequest(result);
                         }
                         break;
                     case EventType.UserLogout:
-                        var result5 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserLogoutDto>(content.ToString()), type.ToString());
-                        if (result5.Length > 0)
+                        result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserLogoutDto>(content.ToString()), type.ToString());
+                        if (result.Length > 0)
                         {
-                            return this.BadRequest(result5);
+                            return this.BadRequest(result);
                         }
                         break;
                     case EventType.UserRegistered:
-                        var result2 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserRegisteredDto>(content.ToString()), type.ToString());
-                        if (result2.Length > 0)
+                        result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<UserRegisteredDto>(content.ToString()), type.ToString());
+                        if (result.Length > 0)
                         {
-                            return this.BadRequest(result2);
+                            return this.BadRequest(result);
                         }
                         break;
                     case EventType.ProductInstalled:
-                        var result3 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<ProductInstalledDto>(content.ToString()), type.ToString());
-                        if (result3.Length > 0)
+                        result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<ProductInstalledDto>(content.ToString()), type.ToString());
+                        if (result.Length > 0)
                         {
-                            return this.BadRequest(result3);
+                            return this.BadRequest(result);
                         }
                         break;
                     case EventType.ProductUninstalled:
-                        var result4 = new MessageSender().SendEvent(JsonConvert.DeserializeObject<ProductUninstalledDto>(content.ToString()), type.ToString());
-                        if (result4.Length > 0)
+                        result = new MessageSender().SendEvent(JsonConvert.DeserializeObject<ProductUninstalledDto>(content.ToString()), type.ToString());
+                        if (result.Length > 0)
                         {
-                            return this.BadRequest(result4);
+                            return this.BadRequest(result);
                         }
                         break;
                     default:
