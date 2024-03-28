@@ -81,7 +81,7 @@ namespace EventsWebService.Controllers
         }
 
         [HttpDelete]
-        [Route("gdpr")]
+        [Route("delete")]
         [ApiKey]
         public ActionResult DeleteUserData(string userEmail)
         {
