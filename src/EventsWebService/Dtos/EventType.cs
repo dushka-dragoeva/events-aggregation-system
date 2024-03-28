@@ -9,7 +9,6 @@
         UserLogout = 4,
         FileUpload = 5,
         ProductInstalled = 6,
-        ProductUninstalled = 7,
-        InvoiceCreated = 8
+        ProductUninstalled = 7
     }
 }
