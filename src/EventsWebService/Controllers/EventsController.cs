@@ -11,9 +11,8 @@ namespace EventsWebService.Controllers
     public class EventsController : ControllerBase
     {
         [HttpPost]
-        [Route("create")]
         [ApiKey]
-        public ActionResult Post([FromQuery]EventType type, [FromBody]object content)
+        public ActionResult PostEvent([FromQuery]EventType type, [FromBody]object content)
         {
             if (content == null)
             {
@@ -79,16 +78,6 @@ namespace EventsWebService.Controllers
             }
 
             return this.Ok(new { Status = "Event processed successfully", Time = DateTime.UtcNow, ReferenseId = Guid.NewGuid() });
-        }
-
-        [HttpDelete]
-        [Route("delete")]
-        [ApiKey]
-        public ActionResult DeleteUserData(string userEmail)
-        {
-            new MessageSender().SendUserDelete(userEmail);
-
-            return this.Ok(new { Status = "User data deleted successfully" });
         }
     }
 }

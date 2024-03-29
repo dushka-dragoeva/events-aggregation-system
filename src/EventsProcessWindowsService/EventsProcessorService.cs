@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 
 namespace EventsProcessWindowsService
 {
@@ -35,6 +36,7 @@ namespace EventsProcessWindowsService
             this.connection = factory.CreateConnection();
             this.channel = this.connection.CreateModel();
 
+            this.channel.BasicQos(prefetchSize: 0, prefetchCount: 5, global: false);
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
