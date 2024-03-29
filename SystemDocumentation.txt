@@ -85,7 +85,7 @@ Example valid body for event types:
 DELETE /Users
 
 - requires api key authentication (api key is located in appsettings.json)
-- query params: userEmail (must be a valid event type)
+- query params: userEmail
 
 For manual and exploratory testing before automation there is swagger at - http://localhost:5083/swagger/index.html
 
