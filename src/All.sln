@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsWebService", "EventsWebService\EventsWebService.csproj", "{B0FA5C4B-197D-4DFF-AD01-2066E317B405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventsWebService", "EventsWebService\EventsWebService.csproj", "{B0FA5C4B-197D-4DFF-AD01-2066E317B405}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsProcessWindowsService", "EventsProcessWindowsService\EventsProcessWindowsService.csproj", "{9940DD56-6662-4B14-A99D-1858D5ADD15E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventsWebServiceTests", "..\tests\EventsWebServiceTests\EventsWebServiceTests.csproj", "{77382FB4-4C48-45A8-A75C-922E4BD2A813}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9940DD56-6662-4B14-A99D-1858D5ADD15E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9940DD56-6662-4B14-A99D-1858D5ADD15E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9940DD56-6662-4B14-A99D-1858D5ADD15E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77382FB4-4C48-45A8-A75C-922E4BD2A813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77382FB4-4C48-45A8-A75C-922E4BD2A813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77382FB4-4C48-45A8-A75C-922E4BD2A813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77382FB4-4C48-45A8-A75C-922E4BD2A813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
