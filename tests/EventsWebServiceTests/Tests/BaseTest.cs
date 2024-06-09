@@ -1,36 +1,44 @@
+using EventsWebServiceTests.Configuration;
 using EventsWebServiceTests.Database.Models;
 using EventsWebServiceTests.Database.Repositories;
 using Microsoft.Extensions.Configuration;
+using RestSharp;
 
 namespace EventsWebServiceTests.Tests;
 
 public class BaseTest
 {
+    protected RestClient _restClient;
+
     protected EventsdbContext EventsdbContext { get; set; }
 
-    protected Repository<User> UserRepository { get; set; }
+    protected GuidKeyRepository<User> UserRepository { get; set; }
 
     protected IConfiguration Configuration { get; set; }
 
+    protected RestResponse Response;
+
 
     [OneTimeSetUp]
-    public void ClassSetup()
+    public virtual void ClassSetup()
     {
         string connectionString = ConfigurationReader.GetConnectionString();
-        EventsdbContext = new EventsdbContext();
-        UserRepository = new Repository<User>(EventsdbContext);
+        EventsdbContext = new EventsdbContext(connectionString);
+        UserRepository = new GuidKeyRepository<User>(EventsdbContext);
+        _restClient = new RestClient();
     }
 
     [OneTimeTearDown]
-    public void ClassCleanup()
+    public virtual void ClassCleanup()
     {
         UserRepository.Dispose();
         EventsdbContext.Dispose();
+        _restClient.Dispose();
     }
 
 
     [Test]
-    public async Task Test2()
+    public async Task DatabaseTest()
     {
         var users = await UserRepository.GetAllAsync();
         var user = new User
@@ -44,18 +52,5 @@ public class BaseTest
 
         await UserRepository.AddAsync(user);
         await UserRepository.DeleteAsync(user.Id);
-    }
-
-    [Test]
-    public void Test3()
-    {
-        var user = new User
-        {
-            Id = Guid.NewGuid().ToString(),
-            UserName = "Test2",
-            UserCompanyName = "TestCo",
-            UserEmail = "Test2@gmail.com",
-            DateRegistered = DateTime.Now.ToString(),
-        };
     }
 }

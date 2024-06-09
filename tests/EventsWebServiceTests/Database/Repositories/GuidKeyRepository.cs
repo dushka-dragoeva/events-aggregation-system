@@ -1,16 +1,16 @@
 ﻿using EventsWebServiceTests.Database.Models;
-using EventsWebServiceTests.Database.Repository;
+using EventsWebServiceTests.Database.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventsWebServiceTests.Database.Repositories
 {
-    public class Repository<T> : IRepository<T>, IDisposable where T : class
+    public class GuidKeyRepository<T> : IGuidKeyRepository<T> where T : class
     {
         private readonly EventsdbContext _context;
         private readonly DbSet<T> _dbSet;
         private bool _disposed = false;
 
-        public Repository(EventsdbContext context)
+        public GuidKeyRepository(EventsdbContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();

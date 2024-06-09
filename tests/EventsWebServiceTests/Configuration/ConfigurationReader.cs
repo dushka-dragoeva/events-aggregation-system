@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using EventsWebServiceTests.Utils;
 
 namespace EventsWebServiceTests.Configuration
 {
@@ -6,17 +7,17 @@ namespace EventsWebServiceTests.Configuration
     {
         internal static string GetApiKey()
         {
-            return GetConfigurationValue("ApiKey");
+            return GetConfigurationValue(TestConstants.ApiKeyName);
         }
 
         internal static string GetApplicationUrl()
         {
-            return GetConfigurationValue("ApplicationUrl");
+            return GetConfigurationValue(TestConstants.ApplicationUrlName);
         }
 
         internal static string GetConnectionString()
         {
-            return GetConfigurationValue("ConnectionString");
+            return GetConfigurationValue(TestConstants.ConnectionStringName);
         }
 
         internal static string GetConfigurationValue(string name)
