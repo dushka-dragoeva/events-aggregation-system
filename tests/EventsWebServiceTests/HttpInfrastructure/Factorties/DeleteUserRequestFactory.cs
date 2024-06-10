@@ -17,6 +17,15 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             return request;
         }
 
+        internal RestRequest BuildRequestWithoutEmail()
+        {
+            var url = $"{ConfigurationReader.GetApplicationUrl()}/Users?userEmail=";
+            RestRequest request = new RestRequest(url, Method.Delete);
+            request.AddHeader(TestConstants.ApiKeyHeaderName, ConfigurationReader.GetApiKey());
+
+            return request;
+        }
+
 
         internal string BuildUrl(string email)
         {

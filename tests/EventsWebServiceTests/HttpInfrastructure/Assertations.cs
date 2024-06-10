@@ -58,7 +58,7 @@ namespace EventsWebServiceTests.ApiInfrastructure
 
         internal static void AssertEventIsPostedSuccessfully(RestResponse response)
         {
-            var schema = ResponsesJsonSchemas.EventSuccseesResponseSchema();
+            var schema = ResponseJsonSchemas.EventSuccsees();
             Assert.Multiple(() =>
             {
                 AssertContentTypeIsApplicationJson(response);

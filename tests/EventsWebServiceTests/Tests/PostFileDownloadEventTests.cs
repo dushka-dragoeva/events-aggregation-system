@@ -130,7 +130,7 @@ namespace EventsWebServiceTests.Tests
             {
                 Assert.AreEqual("application/problem+json", Response.ContentType);
                 Assertations.AssertBadRequestStatusCode(Response);
-                Assertations.AssertJsonSchema(Response, ResponsesJsonSchemas.EventBadRequestResponseSchema());
+                Assertations.AssertJsonSchema(Response, ResponseJsonSchemas.EventBadRequest());
                 Assert.AreEqual(Response.ErrorException.Message, "A non-empty request body is required");
                 Assert.IsTrue(Response.Content.Contains(ExpectedErrorContentMessage), $"Expected Content to contains {ExpectedErrorContentMessage}, but was {Response.Content}");
             });
