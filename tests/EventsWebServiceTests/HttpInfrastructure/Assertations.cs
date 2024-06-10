@@ -1,4 +1,5 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure.Dtos;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -17,7 +18,12 @@ namespace EventsWebServiceTests.ApiInfrastructure
 
         public static void AssertSuccessfulStatusCode(RestResponse response)
         {
-            Assert.True(response.StatusCode == HttpStatusCode.OK, $"Expected Statuc Code to be {HttpStatusCode.OK}, but was {HttpStatusCode.BadRequest}");
+            Assert.True(response.StatusCode == HttpStatusCode.OK, $"Expected Statuc Code to be {HttpStatusCode.OK}, but was {response.StatusCode}");
+        }
+
+        public static void AssertBadRequestStatusCode(RestResponse response)
+        {
+            Assert.True(response.StatusCode == HttpStatusCode.BadRequest, $"Expected Statuc Code to be {HttpStatusCode.BadRequest}, but was {HttpStatusCode.BadRequest}");
         }
 
         public static void AssertJsonSchema(RestResponse response, string schemaContent)
@@ -36,22 +42,40 @@ namespace EventsWebServiceTests.ApiInfrastructure
             AssertJsonSchema(response.Content, jsonSchema);
         }
 
-        internal static void AssertSuccessEventStatusMessage(RestResponse response)
+        internal static void AssertEventSuccessStatusMessage(RestResponse response)
         {
             var actualEventResponseDto = JsonConvert.DeserializeObject<EventResponseDto>(response.Content);
             Assert.AreEqual("Event processed successfully", actualEventResponseDto.Status);
         }
 
-        public static void AssertEventIsPostedSuccessfully(RestResponse response)
+        internal static void AssertEventBadRequestStatusMessage(RestResponse response, params string[] expectedMessages)
         {
-            var schema = ResponsesJsonSchemas.EventResponseSchema();
+            var mesages = JsonConvert.DeserializeObject<List<string>>(response.Content);
+            CollectionAssert.AreEqual(expectedMessages.ToList(), mesages);
+        }
+
+
+
+        internal static void AssertEventIsPostedSuccessfully(RestResponse response)
+        {
+            var schema = ResponsesJsonSchemas.EventSuccseesResponseSchema();
             Assert.Multiple(() =>
             {
                 AssertContentTypeIsApplicationJson(response);
                 AssertSuccessfulStatusCode(response);
-                AssertSuccessEventStatusMessage(response);
+                AssertEventSuccessStatusMessage(response);
                 AssertJsonSchema(response, schema);
 
+            });
+        }
+
+        public static void AssertCorrectBadRequest(RestResponse response, params string [] messages)
+        {
+            Assert.Multiple(() =>
+            {
+                AssertContentTypeIsApplicationJson(response);
+                AssertBadRequestStatusCode(response);
+                AssertEventBadRequestStatusMessage(response, messages);
             });
         }
 

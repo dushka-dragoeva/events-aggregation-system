@@ -8,6 +8,8 @@ namespace EventsWebServiceTests.Tests;
 
 public class BaseTest
 {
+    private string _connectionString;
+
     protected RestClient _restClient;
 
     protected EventsdbContext EventsdbContext { get; set; }
@@ -22,14 +24,23 @@ public class BaseTest
     [OneTimeSetUp]
     public virtual void ClassSetup()
     {
-        string connectionString = ConfigurationReader.GetConnectionString();
-        EventsdbContext = new EventsdbContext(connectionString);
-        UserRepository = new GuidKeyRepository<User>(EventsdbContext);
-        _restClient = new RestClient();
+        _connectionString = ConfigurationReader.GetConnectionString();
     }
 
-    [OneTimeTearDown]
-    public virtual void ClassCleanup()
+    [SetUp]
+    public virtual void TestSetup()
+    {
+        EventsdbContext = new EventsdbContext(_connectionString);
+        UserRepository = new GuidKeyRepository<User>(EventsdbContext);
+        var options = new RestClientOptions("http://localhost:60715/")
+        {
+            ThrowOnAnyError = false,
+        };
+        _restClient = new RestClient(options);
+    }
+
+    [TearDown]
+    public virtual void TestCleanup()
     {
         UserRepository.Dispose();
         EventsdbContext.Dispose();
