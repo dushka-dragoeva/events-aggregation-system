@@ -3,7 +3,6 @@ using EventsWebServiceTests.ApiInfrastructure.Factorties;
 using EventsWebServiceTests.Infrastructure.Dtos;
 using EventsWebServiceTests.Database.Repositories;
 using EventsWebServiceTests.Database.Models;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 
 namespace EventsWebServiceTests.Tests
 {
