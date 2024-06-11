@@ -1,11 +1,11 @@
 ﻿using EventsWebServiceTests.Infrastructure.Dtos;
 using RestSharp;
 
-namespace EventsWebServiceTests.ApiInfrastructure.Factorties
+namespace EventsWebServiceTests.HttpInfrastructure.Factorties.RequestsFactories
 {
-    internal class FileDownlioadRequestFactory : BaseEventRequestFactory
+    public class FileDownloadRequestFactory : BaseEventRequestFactory
     {
-        internal RestRequest BuildValidRequest(FileDownloadDto fileDownloadDto)
+        public RestRequest BuildValidRequest(FileDownloadDto fileDownloadDto)
         {
             RestRequest request = BuildEmptyRequest();
             request.AddJsonBody(new
@@ -20,7 +20,7 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             return request;
         }
 
-        internal RestRequest BuildRequestWithMissingId(FileDownloadDto fileDownloadDto)
+        public RestRequest BuildRequestWithMissingId(FileDownloadDto fileDownloadDto)
         {
             RestRequest request = BuildEmptyRequest();
             request.AddJsonBody(new
@@ -34,7 +34,7 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             return request;
         }
 
-        internal RestRequest BuildRequestWithMissingDate(FileDownloadDto fileDownloadDto)
+        public RestRequest BuildRequestWithMissingDate(FileDownloadDto fileDownloadDto)
         {
             RestRequest request = BuildEmptyRequest();
             request.AddJsonBody(new
@@ -48,7 +48,7 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             return request;
         }
 
-        internal RestRequest BuildRequestWithMissingFileName(FileDownloadDto fileDownloadDto)
+        public RestRequest BuildRequestWithMissingFileName(FileDownloadDto fileDownloadDto)
         {
             RestRequest request = BuildEmptyRequest();
             request.AddJsonBody(new
@@ -61,7 +61,7 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             return request;
         }
 
-        internal RestRequest BuildRequestWithMissingFileLength(FileDownloadDto fileDownloadDto)
+        public RestRequest BuildRequestWithMissingFileLength(FileDownloadDto fileDownloadDto)
         {
             RestRequest request = BuildEmptyRequest();
             request.AddJsonBody(new
@@ -75,18 +75,9 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             return request;
         }
 
-        internal RestRequest BuildRequestWithEmptyBody()
+        public RestRequest BuildEmptyRequest()
         {
-            var request = BuildEmptyRequest();
-            request.AddJsonBody(new { });
-
-            return request;
-        }
-
-        internal RestRequest BuildEmptyRequest()
-        {
-            var url = BuildEventUrl(EventType.FileDownload);
-            RestRequest request = BuildBasePostRequest(url);
+            var request = base.BuildEmptyRequest(EventType.FileDownload);
 
             return request;
         }

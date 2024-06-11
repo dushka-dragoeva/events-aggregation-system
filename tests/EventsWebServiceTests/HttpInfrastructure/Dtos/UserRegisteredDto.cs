@@ -1,15 +1,15 @@
-﻿namespace EventsWebServiceTests.Infrastructure.Dto
+﻿namespace EventsWebServiceTests.Infrastructure.Dtos
 {
-    internal class UserRegisteredDto
+   public class UserRegisteredDto
     {
-        internal string Email { get; set; }
+       public string Email { get; set; }
 
-        internal string FirstName { get; set; }
+       public string FirstName { get; set; }
 
-        internal string LastName { get; set; }
+       public string LastName { get; set; }
 
-        internal string Company { get; set; }
+       public string Company { get; set; }
 
-        internal string Phone { get; set; }
+       public string Phone { get; set; }
     }
 }

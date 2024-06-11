@@ -2,9 +2,9 @@
 using EventsWebServiceTests.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
-using EventsWebServiceTests.ApiInfrastructure.Factorties;
+using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
 
-namespace EventsWebServiceTests.Tests
+namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
     internal class GetEnviormentsTests : BaseTest
@@ -19,7 +19,7 @@ namespace EventsWebServiceTests.Tests
             var getRequest = new RestRequest(url, Method.Get);
 
             // Act
-            RestResponse getResponse = await _restClient.ExecuteAsync(getRequest);
+            RestResponse getResponse = await RestClient.ExecuteAsync(getRequest);
 
             // Assert
             Assert.Multiple(() =>

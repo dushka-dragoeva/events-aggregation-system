@@ -2,7 +2,7 @@
 
 namespace EventsWebServiceTests.Infrastructure.Dtos
 {
-    internal class FileDownloadDto
+    public class FileDownloadDto
     {
         [JsonProperty("Id")]
         internal string Id { get; set; }

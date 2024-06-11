@@ -1,9 +1,9 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure;
-using EventsWebServiceTests.ApiInfrastructure.Factorties;
+using EventsWebServiceTests.HttpInfrastructure.Factorties.RequestsFactories;
 using EventsWebServiceTests.Utils;
 using RestSharp;
 
-namespace EventsWebServiceTests.Tests
+namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
     internal class DeleteUsersTests : BaseTest
@@ -27,7 +27,7 @@ namespace EventsWebServiceTests.Tests
             var deleteRequest = _deleteUserRequestFactory.BuildRequest(validEmail);
 
             // Act
-            RestResponse deleteResponse = await _restClient.ExecuteAsync(deleteRequest);
+            RestResponse deleteResponse = await RestClient.ExecuteAsync(deleteRequest);
 
             // Assert
             Assert.Multiple(() =>
@@ -45,7 +45,7 @@ namespace EventsWebServiceTests.Tests
             var deleteRequest = _deleteUserRequestFactory.BuildRequest(invalidEmail);
 
             // Act
-            RestResponse deleteResponse = await _restClient.ExecuteAsync(deleteRequest);
+            RestResponse deleteResponse = await RestClient.ExecuteAsync(deleteRequest);
 
             // Assert
             Assert.Multiple(() =>
@@ -64,7 +64,7 @@ namespace EventsWebServiceTests.Tests
             var expectedBodyErrorMessage = "The userEmail field is required.";
 
             // Act
-            Response = await _restClient.ExecuteAsync(deleteRequest);
+            Response = await RestClient.ExecuteAsync(deleteRequest);
 
             //Assert
             Assert.Multiple(() =>

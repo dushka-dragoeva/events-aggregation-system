@@ -2,7 +2,7 @@
 
 namespace EventsWebServiceTests.ApiInfrastructure.Dtos
 {
-    internal class EnvironmentResponseDto
+    public class EnvironmentResponseDto
     {
         [JsonProperty("gtmId")]
         public string GtmId { get; set; }

@@ -2,15 +2,15 @@
 
 namespace EventsWebServiceTests.ApiInfrastructure.Dtos
 {
-    internal class EventResponseDto
+    public class EventResponseDto
     {
         [JsonProperty("status")]
-        internal string Status { get; set; }
+        public string Status { get; set; }
 
         [JsonProperty("time")]
-        internal DateTime Time { get; set; }
+        public DateTime Time { get; set; }
 
         [JsonProperty("referenseId")]
-        internal Guid ReferenseId { get; set; }
+        public Guid ReferenseId { get; set; }
     }
 }

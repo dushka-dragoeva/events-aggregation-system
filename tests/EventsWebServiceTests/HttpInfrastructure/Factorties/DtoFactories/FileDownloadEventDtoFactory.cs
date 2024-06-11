@@ -1,11 +1,11 @@
 ﻿using EventsWebServiceTests.Infrastructure.Dtos;
 using EventsWebServiceTests.Utils;
 
-namespace EventsWebServiceTests.ApiInfrastructure.Factorties
+namespace EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories
 {
-    internal static class FileDownEventFactory
+    public static class FileDownloadEventDtoFactory
     {
-        internal static FileDownloadDto BuildValidDto() => new FileDownloadDto()
+        public static FileDownloadDto BuildValidDto() => new FileDownloadDto()
         {
             Id = Guid.NewGuid().ToString(),
             Date = DateTime.UtcNow,
@@ -13,7 +13,7 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             FileLenght = RandamGenerator.GenerateInt(10000, 999999),
         };
 
-        internal static string[] BuildBadRequestMessages() => new string[]
+        public static string[] BuildBadRequestMessages() => new string[]
         {
             "Id is required.",
             "Date is required.",

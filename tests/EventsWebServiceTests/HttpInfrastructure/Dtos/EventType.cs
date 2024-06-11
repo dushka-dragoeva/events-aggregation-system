@@ -1,6 +1,6 @@
 ﻿namespace EventsWebServiceTests.Infrastructure.Dtos
 {
-    internal enum EventType
+    public enum EventType
     {
         None = 0,
         FileDownload = 1,

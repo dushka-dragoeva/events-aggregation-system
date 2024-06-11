@@ -2,13 +2,13 @@
 using EventsWebServiceTests.Utils;
 using RestSharp;
 
-namespace EventsWebServiceTests.ApiInfrastructure.Factorties
+namespace EventsWebServiceTests.HttpInfrastructure.Factorties.RequestsFactories
 {
-    internal class DeleteUserRequestFactory
+    public class DeleteUserRequestFactory
     {
         private readonly string _applicationUrl = ConfigurationReader.GetApplicationUrl();
 
-        internal  RestRequest BuildRequest(string email)
+        public RestRequest BuildRequest(string email)
         {
 
             RestRequest request = new RestRequest(BuildUrl(email), Method.Delete);
@@ -17,7 +17,7 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
             return request;
         }
 
-        internal RestRequest BuildRequestWithoutEmail()
+        public RestRequest BuildRequestWithoutEmail()
         {
             var url = $"{ConfigurationReader.GetApplicationUrl()}/Users?userEmail=";
             RestRequest request = new RestRequest(url, Method.Delete);
@@ -27,7 +27,7 @@ namespace EventsWebServiceTests.ApiInfrastructure.Factorties
         }
 
 
-        internal string BuildUrl(string email)
+        private string BuildUrl(string email)
         {
             return $"{ConfigurationReader.GetApplicationUrl()}/Users?userEmail={email.Replace("@", "%40")}";
         }

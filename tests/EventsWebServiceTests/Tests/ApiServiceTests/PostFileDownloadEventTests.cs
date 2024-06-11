@@ -1,32 +1,22 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure;
-using EventsWebServiceTests.ApiInfrastructure.Factorties;
 using EventsWebServiceTests.Infrastructure.Dtos;
 using EventsWebServiceTests.Database.Repositories;
-using EventsWebServiceTests.Database.Models;
+using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
 
-namespace EventsWebServiceTests.Tests
+namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
     internal class PostFileDownloadEventTests : BaseTest
     {
         const string ExpectedErrorContentMessage = "The content field is required.";
-        private FileDownloadDto _fileDownloadDto;
-        private IntKeyRepository<FileDownloadEvent> _fileDownloadEventRepository;
-        private FileDownlioadRequestFactory _fileDownlioadRequestFactory;
-
-        [SetUp]
-        public override void TestSetup()
-        {
-            base.TestSetup();
-            _fileDownloadEventRepository = new IntKeyRepository<FileDownloadEvent>(EventsdbContext);
-            _fileDownlioadRequestFactory = new FileDownlioadRequestFactory();
-        }
-
+        private FileDownloadDto FileDownloadDto { get; set; }
+       
+    
         [TearDown]
-        public override void TestCleanup()
+        public async Task TestCleanup()
         {
-            DeleteFileDownloadEvent();
-            _fileDownloadEventRepository.Dispose();
+            await FileDownloadEventRepository.DeleteByEventIdAsync(FileDownloadDto.Id);
+
             base.TestCleanup();
         }
 
@@ -35,11 +25,11 @@ namespace EventsWebServiceTests.Tests
         public async Task EventIsPostedSuccessfully_When_PostNewFileDownloadedEventWithAllProperties()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            var request = _fileDownlioadRequestFactory.BuildValidRequest(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            var request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertEventIsPostedSuccessfully(Response);
@@ -49,11 +39,11 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_PostNewFileDownloadEventWithoutId()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            var request = _fileDownlioadRequestFactory.BuildRequestWithMissingId(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            var request = FileDownlioadRequestFactory.BuildRequestWithMissingId(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertCorrectBadRequest(Response, "Id is required.");
@@ -63,11 +53,11 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_PostNewFileDownloadEventWithoutDate()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            var request = _fileDownlioadRequestFactory.BuildRequestWithMissingDate(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            var request = FileDownlioadRequestFactory.BuildRequestWithMissingDate(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertCorrectBadRequest(Response, "Date is required.");
@@ -77,11 +67,11 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_PostNewFileDownloadEventWithoutFileName()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            var request = _fileDownlioadRequestFactory.BuildRequestWithMissingFileName(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            var request = FileDownlioadRequestFactory.BuildRequestWithMissingFileName(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertCorrectBadRequest(Response, "FileName is required.");
@@ -91,11 +81,11 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_PostNewFileDownloadEventWithoutFileLenght()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            var request = _fileDownlioadRequestFactory.BuildRequestWithMissingFileLength(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            var request = FileDownlioadRequestFactory.BuildRequestWithMissingFileLength(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertCorrectBadRequest(Response, "FileLenght must be positive integer.");
@@ -105,13 +95,13 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_PostNewFileDownloadEventWithEmptyBody()
         {
             // Arange
-            var request = _fileDownlioadRequestFactory.BuildRequestWithEmptyBody();
+            var request = FileDownlioadRequestFactory.BuildRequestWithEmptyBody(EventType.FileDownload);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, FileDownEventFactory.BuildBadRequestMessages());
+            Assertations.AssertCorrectBadRequest(Response, FileDownloadEventDtoFactory.BuildBadRequestMessages());
         }
 
         [Test]
@@ -119,10 +109,10 @@ namespace EventsWebServiceTests.Tests
         {
             // Arange
 
-            var request = _fileDownlioadRequestFactory.BuildEmptyRequest();
+            var request = FileDownlioadRequestFactory.BuildEmptyRequest();
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
 
             //Assert
@@ -140,13 +130,13 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_IdIsInvalidGuid()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            _fileDownloadDto.Id = "InvalidValue";
-            var expectedResponseMesage = $@"Error converting value \""{_fileDownloadDto.Id}\"" to type 'System.Nullable`1[System.Guid]'.";
-            var request = _fileDownlioadRequestFactory.BuildValidRequest(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            FileDownloadDto.Id = "InvalidValue";
+            var expectedResponseMesage = $@"Error converting value \""{FileDownloadDto.Id}\"" to type 'System.Nullable`1[System.Guid]'.";
+            var request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assert.Multiple(() =>
@@ -161,12 +151,12 @@ namespace EventsWebServiceTests.Tests
         public async Task EventIsPostedSuccessfully_When_FileLentgtIsIntMaxValue()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            _fileDownloadDto.FileLenght = int.MaxValue;
-            var request = _fileDownlioadRequestFactory.BuildValidRequest(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            FileDownloadDto.FileLenght = int.MaxValue;
+            var request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertEventIsPostedSuccessfully(Response);
@@ -177,12 +167,12 @@ namespace EventsWebServiceTests.Tests
         {
             // Arange
             var expectedResponseMesage = "JSON integer 2147483648 is too large or small for an Int32.";
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            _fileDownloadDto.FileLenght = 2147483648;
-            var request = _fileDownlioadRequestFactory.BuildValidRequest(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            FileDownloadDto.FileLenght = 2147483648;
+            var request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assert.Multiple(() =>
@@ -197,12 +187,12 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_FileLenghtIsZero()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            _fileDownloadDto.FileLenght = 0;
-            var request = _fileDownlioadRequestFactory.BuildValidRequest(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            FileDownloadDto.FileLenght = 0;
+            var request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertCorrectBadRequest(Response, "FileLenght must be positive integer.");
@@ -212,32 +202,15 @@ namespace EventsWebServiceTests.Tests
         public async Task CorrectBadRequestResponse_When_FileLenghtIsNegativeValidation()
         {
             // Arange
-            _fileDownloadDto = FileDownEventFactory.BuildValidDto();
-            _fileDownloadDto.FileLenght = -1;
-            var request = _fileDownlioadRequestFactory.BuildValidRequest(_fileDownloadDto);
+            FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
+            FileDownloadDto.FileLenght = -1;
+            var request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
-            Response = await _restClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(request);
 
             //Assert
             Assertations.AssertCorrectBadRequest(Response, "FileLenght must be positive integer.");
-        }
-
-        private void DeleteFileDownloadEvent()
-        {
-            if (_fileDownloadDto != null)
-            {
-                FileDownloadEvent createdFileDownloadEvent = _fileDownloadEventRepository
-               .GetAllAsync()
-               .Result
-               .Where(x => x.EventId == _fileDownloadDto.Id.ToString())
-               .FirstOrDefault();
-
-                if (createdFileDownloadEvent != null)
-                {
-                    _fileDownloadEventRepository.DeleteAsync(createdFileDownloadEvent.Id);
-                }
-            }
         }
     }
 }

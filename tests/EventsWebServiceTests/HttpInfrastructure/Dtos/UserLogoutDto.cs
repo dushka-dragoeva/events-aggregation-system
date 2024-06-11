@@ -1,9 +1,9 @@
 ﻿namespace EventsWebServiceTests.Infrastructure.Dtos
 {
-    internal class UserLogoutDto
+   public class UserLogoutDto
     {
-       internal DateTime Date { get; set; }
+      public DateTime Date { get; set; }
 
-       internal string Email { get; set; }
+      public string Email { get; set; }
     }
 }

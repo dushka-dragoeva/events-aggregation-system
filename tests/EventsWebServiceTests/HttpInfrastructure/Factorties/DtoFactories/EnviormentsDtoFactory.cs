@@ -1,11 +1,11 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure.Dtos;
 using EventsWebServiceTests.Infrastructure.Dtos;
 
-namespace EventsWebServiceTests.ApiInfrastructure.Factorties
+namespace EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories
 {
-    internal static class EnviormentsDtoFactory
+    public static class EnviormentsDtoFactory
     {
-        internal static EnvironmentResponseDto BuildExpectedEnvironmentResponseDto() => new EnvironmentResponseDto
+        public static EnvironmentResponseDto BuildExpectedEnvironmentResponseDto() => new EnvironmentResponseDto
         {
             GtmId = "GTM-K5N5LX",
             SupportedEvents = new List<string>
