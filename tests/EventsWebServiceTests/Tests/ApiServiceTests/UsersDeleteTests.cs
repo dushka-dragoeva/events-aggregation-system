@@ -1,4 +1,6 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure;
+using EventsWebServiceTests.Database.Factories;
+using EventsWebServiceTests.Database.Models;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.RequestsFactories;
 using EventsWebServiceTests.Utils;
 using RestSharp;
@@ -10,6 +12,14 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
     {
         private const string ExpectedSuccessResponseBody = @"{""status"":""User data deleted successfully""}";
         private DeleteUserRequestFactory _deleteUserRequestFactory;
+        private User _user;
+        private UserLoginEvent _userLoginEvent;
+        private UserLoginEvent _userLogoutEvent;
+        private ProductActionTraking _productActionTracking;
+        private ProductActionTraking _createdProductInstalled;
+        private User _createdUser;
+        private UserLoginEvent _createdUserLoginEvent;
+        private UserLogOutEvent _createdUserLogoutEvent;
 
         [SetUp]
         public override void TestSetup()
@@ -17,6 +27,17 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             base.TestSetup();
 
             _deleteUserRequestFactory = new DeleteUserRequestFactory();
+        }
+
+        [TearDown]
+        public new async Task TestCleanup()
+        {
+            if (_createdProductInstalled != null)
+            {
+                await ProductActionTrakingRepository.DeleteAsync(_productActionTracking.Id);
+            }
+
+            base.TestCleanup();
         }
 
         [Test]
@@ -75,6 +96,67 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
                 Assert.That(Response.Content, Does.Contain(expectedBodyErrorMessage),
                     $"Expected Response to contain {expectedBodyErrorMessage}, but was {Response.Content}");
             });
+        }
+
+        [Test]
+
+        public async Task AllDataBaseRecordsWhichContainsUserEmailAreDeleted_When_DeleteUser()
+        {
+            // Arrange
+            await CreateTestData();
+            await AssertTestDataIsCreated();
+
+            var deleteRequest = _deleteUserRequestFactory.BuildRequest(_user.UserEmail);
+
+            //Act
+            Response = await RestClient.ExecuteAsync(deleteRequest);
+
+            // Assert
+            await AssertCorrectUserDataIsDeleted();
+        }
+
+        private async Task AssertCorrectUserDataIsDeleted()
+        {
+            _createdUser = await UserRepository.GetByEmailAcync(_user.UserEmail);
+            _createdUserLoginEvent = await UserLoginEventRepository.GetByUserIdAcync(_userLoginEvent.UserId);
+            _createdUserLogoutEvent = await UserLogoutEventRepository.GetByEmailAcync(_userLoginEvent.Email);
+            _createdProductInstalled = await ProductActionTrakingRepository.GetByUserIdAcync(_productActionTracking.UserId);
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsNull(_createdUser);
+                Assert.IsNull(_createdUserLoginEvent);
+                Assert.IsNull(_createdUserLogoutEvent);
+                Assert.IsNotNull(_createdProductInstalled);
+            });
+        }
+
+        private async Task AssertTestDataIsCreated()
+        {
+            _createdUser = await UserRepository.GetByEmailAcync(_user.UserEmail);
+            _createdUserLoginEvent = await UserLoginEventRepository.GetByUserIdAcync(_userLoginEvent.UserId);
+            _createdUserLogoutEvent = await UserLogoutEventRepository.GetByEmailAcync(_userLoginEvent.Email);
+            _createdProductInstalled = await ProductActionTrakingRepository.GetByUserIdAcync(_productActionTracking.UserId);
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsNotNull(_createdUser);
+                Assert.IsNotNull(_createdUserLoginEvent);
+                Assert.IsNotNull(_createdUserLoginEvent);
+                Assert.IsNotNull(_createdProductInstalled);
+            });
+        }
+
+        private async Task CreateTestData()
+        {
+            _user = EventFactory.BuildDefaultUser();
+            _userLoginEvent = EventFactory.BuildDefaultUserLoginEvent(_user);
+            _userLogoutEvent = EventFactory.BuildDefaultUserLogoutEvent(_user.UserEmail);
+            _productActionTracking = EventFactory.BuildDefaultProductActionTraking(_user.Id);
+
+            await UserRepository.AddAsync(_user);
+            await UserLoginEventRepository.AddAsync(_userLoginEvent);
+            await ProductActionTrakingRepository.AddAsync(_productActionTracking);
         }
     }
 }
