@@ -16,10 +16,8 @@ namespace EventsWebServiceTests.Database.Repositories
 
         public async Task<User> GetByEmailAcync(string email)
         {
-            User user = GetAllAsync()
-              .Result
-              .Where(x => x.UserEmail == email)
-              .FirstOrDefault();
+            var users = await GetAllAsync();
+            User? user = users.FirstOrDefault(x => x.UserEmail == email);
 
             return user;
         }

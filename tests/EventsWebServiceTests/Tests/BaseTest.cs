@@ -1,4 +1,3 @@
-using EventsWebServiceTests.Configuration;
 using EventsWebServiceTests.Database.Models;
 using EventsWebServiceTests.Database.Repositories;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.RequestsFactories;
@@ -10,11 +9,6 @@ namespace EventsWebServiceTests.Tests;
 
 public class BaseTest
 {
-
-    private string _connectionString;
-
-    protected IConfiguration Configuration { get; private set; }
-
     protected RestClient RestClient { get; private set; }
 
     protected EventsdbContext EventsdbContext { get; private set; }
@@ -37,31 +31,31 @@ public class BaseTest
 
     protected UserLoginRequestFactory UserLoginRequestFactory { get; private set; }
 
-    public UserLogoutRequestFactory UserLogoutRequestFactory { get; private set; }
+    protected UserLogoutRequestFactory UserLogoutRequestFactory { get; private set; }
 
-    public UserRegisteredRequestFactory UserRegisteredRequestFactory { get; private set; }
+    protected UserRegisteredRequestFactory UserRegisteredRequestFactory { get; private set; }
 
-    public ProductActionRequestFactory ProductActionRequestFactory { get; private set; }
+    protected ProductActionRequestFactory ProductActionRequestFactory { get; private set; }
 
-    protected RestRequest Request { get; set; }
+    protected RestRequest? Request { get; set; }
 
-    protected RestResponse Response { get; set; }
+    protected RestResponse? Response { get; set; }
 
-    protected FileDownloadDto FileDownloadDto { get; set; }
+    protected FileDownloadDto? FileDownloadDto { get; set; }
 
-    protected UserLoginDto UserLoginDto { get; set; }
+    protected UserLoginDto? UserLoginDto { get; set; }
 
-    protected UserLogoutDto UserLogoutDto { get; set; }
+    protected UserLogoutDto? UserLogoutDto { get; set; }
 
-    protected UserRegisteredDto UserRegisteredDto { get; set; }
+    protected UserRegisteredDto? UserRegisteredDto { get; set; }
 
-    protected ProductActionDto ProductActionDto { get; set; }
+    protected ProductActionDto? ProductActionDto { get; set; }
 
 
     [OneTimeSetUp]
     public virtual void ClassSetup()
     {
-        _connectionString = ConfigurationReader.GetConnectionString();
+        ////_connectionString = ConfigurationReader.GetConnectionString();
 
         FileDownlioadRequestFactory = new FileDownloadRequestFactory();
         UserLoginRequestFactory = new UserLoginRequestFactory();
@@ -79,7 +73,7 @@ public class BaseTest
         };
         RestClient = new RestClient(options);
 
-        EventsdbContext = new EventsdbContext(_connectionString);
+        EventsdbContext = new EventsdbContext();
         IntKeyRepository = new IntKeyRepository<object>(EventsdbContext);
         GuidKeyRepository = new GuidKeyRepository<object>(EventsdbContext);
 

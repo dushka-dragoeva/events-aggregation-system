@@ -23,7 +23,7 @@ namespace EventsWebServiceTests.ApiInfrastructure
 
         public static void AssertBadRequestStatusCode(RestResponse response)
         {
-            Assert.True(response.StatusCode == HttpStatusCode.BadRequest, $"Expected Statuc Code to be {HttpStatusCode.BadRequest}, but was {HttpStatusCode.BadRequest}");
+            Assert.True(response.StatusCode == HttpStatusCode.BadRequest, $"Expected Statuc Code to be {HttpStatusCode.BadRequest}, but was {response.StatusCode}");
         }
 
         public static void AssertJsonSchema(RestResponse response, string schemaContent)
@@ -69,7 +69,7 @@ namespace EventsWebServiceTests.ApiInfrastructure
             });
         }
 
-        public static void AssertCorrectBadRequest(RestResponse response, params string [] messages)
+        public static void AssertBadRequestResponse(RestResponse response, params string[] messages)
         {
             Assert.Multiple(() =>
             {

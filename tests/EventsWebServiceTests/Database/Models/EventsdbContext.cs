@@ -1,15 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EventsWebServiceTests.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsWebServiceTests.Database.Models;
 
 public partial class EventsdbContext : DbContext
 {
-    private readonly string _connectionString;
-
-    public EventsdbContext(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
+    private readonly string _connectionString = ConfigurationReader.GetConnectionString();
 
     public EventsdbContext()
     {
@@ -40,30 +36,15 @@ public partial class EventsdbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<FileDownloadEvent>(entity =>
-        {
-            entity.ToTable("FileDownloadEvent");
-        });
+        modelBuilder.Entity<FileDownloadEvent>(entity => { entity.ToTable("FileDownloadEvent"); });
 
-        modelBuilder.Entity<ProductActionTraking>(entity =>
-        {
-            entity.ToTable("ProductActionTraking");
-        });
+        modelBuilder.Entity<ProductActionTraking>(entity => { entity.ToTable("ProductActionTraking"); });
 
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.ToTable("User");
-        });
+        modelBuilder.Entity<User>(entity => { entity.ToTable("User"); });
 
-        modelBuilder.Entity<UserLogOutEvent>(entity =>
-        {
-            entity.ToTable("UserLogOutEvent");
-        });
+        modelBuilder.Entity<UserLogOutEvent>(entity => { entity.ToTable("UserLogOutEvent"); });
 
-        modelBuilder.Entity<UserLoginEvent>(entity =>
-        {
-            entity.ToTable("UserLoginEvent");
-        });
+        modelBuilder.Entity<UserLoginEvent>(entity => { entity.ToTable("UserLoginEvent"); });
 
         OnModelCreatingPartial(modelBuilder);
     }

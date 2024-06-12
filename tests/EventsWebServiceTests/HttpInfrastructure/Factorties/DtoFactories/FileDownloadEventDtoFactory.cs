@@ -20,6 +20,5 @@ namespace EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories
             "FileName is required.",
             "FileLenght must be positive integer.",
         };
-
     }
 }

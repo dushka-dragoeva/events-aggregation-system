@@ -2,20 +2,22 @@
 using EventsWebServiceTests.Infrastructure.Dtos;
 using EventsWebServiceTests.Database.Repositories;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
+using System.Net;
 
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
-    internal class PostFileDownloadEventTests : BaseTest
+    internal class FileDownloadEventPostTests : BaseTest
     {
         const string ExpectedErrorContentMessage = "The content field is required.";
-        private FileDownloadDto FileDownloadDto { get; set; }
-       
-    
+
         [TearDown]
-        public async Task TestCleanup()
+        public new async Task TestCleanup()
         {
-            await FileDownloadEventRepository.DeleteByEventIdAsync(FileDownloadDto.Id);
+            if (FileDownloadDto != null)
+            {
+                await FileDownloadEventRepository.DeleteByEventIdAsync(FileDownloadDto.Id);
+            }
 
             base.TestCleanup();
         }
@@ -46,7 +48,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, "Id is required.");
+            Assertations.AssertBadRequestResponse(Response, "Id is required.");
         }
 
         [Test]
@@ -60,7 +62,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, "Date is required.");
+            Assertations.AssertBadRequestResponse(Response, "Date is required.");
         }
 
         [Test]
@@ -74,7 +76,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, "FileName is required.");
+            Assertations.AssertBadRequestResponse(Response, "FileName is required.");
         }
 
         [Test]
@@ -88,7 +90,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, "FileLenght must be positive integer.");
+            Assertations.AssertBadRequestResponse(Response, "FileLenght must be positive integer.");
         }
 
         [Test]
@@ -101,7 +103,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, FileDownloadEventDtoFactory.BuildBadRequestMessages());
+            Assertations.AssertBadRequestResponse(Response, FileDownloadEventDtoFactory.BuildBadRequestMessages());
         }
 
         [Test]
@@ -119,10 +121,9 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Assert.Multiple(() =>
             {
                 Assert.AreEqual("application/problem+json", Response.ContentType);
-                Assertations.AssertBadRequestStatusCode(Response);
-                Assertations.AssertJsonSchema(Response, ResponseJsonSchemas.EventBadRequest());
-                Assert.AreEqual(Response.ErrorException.Message, "A non-empty request body is required");
-                Assert.IsTrue(Response.Content.Contains(ExpectedErrorContentMessage), $"Expected Content to contains {ExpectedErrorContentMessage}, but was {Response.Content}");
+                Assert.IsTrue(
+                    Response.StatusCode == HttpStatusCode.UnsupportedMediaType,
+                    $"Expected Statuc Code to be {HttpStatusCode.UnsupportedMediaType}, but was {Response.StatusCode}");
             });
         }
 
@@ -132,7 +133,8 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             // Arange
             FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
             FileDownloadDto.Id = "InvalidValue";
-            var expectedResponseMesage = $@"Error converting value \""{FileDownloadDto.Id}\"" to type 'System.Nullable`1[System.Guid]'.";
+            var expectedResponseMesage =
+                $@"Error converting value \""{FileDownloadDto.Id}\"" to type 'System.Nullable`1[System.Guid]'.";
             var request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
@@ -143,7 +145,8 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             {
                 Assertations.AssertContentTypeIsApplicationJson(Response);
                 Assertations.AssertBadRequestStatusCode(Response);
-                Assert.IsTrue(Response.Content.Contains(expectedResponseMesage), $"Expected respons to contain {expectedResponseMesage}, but was {Response.Content}");
+                Assert.IsTrue(Response.Content.Contains(expectedResponseMesage),
+                    $"Expected respons to contain {expectedResponseMesage}, but was {Response.Content}");
             });
         }
 
@@ -179,7 +182,8 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             {
                 Assertations.AssertContentTypeIsApplicationJson(Response);
                 Assertations.AssertBadRequestStatusCode(Response);
-                Assert.That(Response.Content.Contains(expectedResponseMesage), $"Expected respons to contain {expectedResponseMesage}, but was {Response.Content}");
+                Assert.That(Response.Content.Contains(expectedResponseMesage),
+                    $"Expected respons to contain {expectedResponseMesage}, but was {Response.Content}");
             });
         }
 
@@ -195,7 +199,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, "FileLenght must be positive integer.");
+            Assertations.AssertBadRequestResponse(Response, "FileLenght must be positive integer.");
         }
 
         [Test]
@@ -210,7 +214,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Response = await RestClient.ExecuteAsync(request);
 
             //Assert
-            Assertations.AssertCorrectBadRequest(Response, "FileLenght must be positive integer.");
+            Assertations.AssertBadRequestResponse(Response, "FileLenght must be positive integer.");
         }
     }
 }

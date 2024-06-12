@@ -11,7 +11,7 @@ namespace EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories
             Date = DateTime.UtcNow,
             FirstName = $"FirstName{RandamGenerator.GenerateInt()}",
             LastName = $"LastName{RandamGenerator.GenerateInt()}",
-            Email = $"Test{RandamGenerator.GenerateRandomString()}@gmail.com",
+            Email = $"Test{RandamGenerator.GenerateString()}@gmail.com",
         };
     }
 }

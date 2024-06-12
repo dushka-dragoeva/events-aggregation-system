@@ -9,7 +9,7 @@
             return _random.Next(minValue, maxValue);
         }
 
-        public static string GenerateRandomString(int length = 5)
+        public static string GenerateString(int length = 5)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             Random random = new Random();

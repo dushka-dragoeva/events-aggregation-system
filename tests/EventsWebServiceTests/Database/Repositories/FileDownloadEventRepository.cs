@@ -16,10 +16,8 @@ namespace EventsWebServiceTests.Database.Repositories
 
         public async Task<FileDownloadEvent> GetByEventIdAcync(string eventId)
         {
-            FileDownloadEvent fileDownloadEvent = GetAllAsync()
-              .Result
-              .Where(x => x.EventId == eventId)
-              .FirstOrDefault();
+            IEnumerable<FileDownloadEvent> events = await GetAllAsync();
+            FileDownloadEvent fileDownloadEvent = events.FirstOrDefault(x => x.EventId == eventId);
 
             return fileDownloadEvent;
         }

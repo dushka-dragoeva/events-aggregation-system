@@ -6,7 +6,7 @@ using RestSharp;
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
-    internal class DeleteUsersTests : BaseTest
+    internal class UsersDeleteTests : BaseTest
     {
         private const string ExpectedSuccessResponseBody = @"{""status"":""User data deleted successfully""}";
         private DeleteUserRequestFactory _deleteUserRequestFactory;
@@ -33,7 +33,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Assert.Multiple(() =>
             {
                 Assertations.AssertContentTypeIsApplicationJson(deleteResponse);
-                Assert.AreEqual(ExpectedSuccessResponseBody, deleteResponse.Content);
+                Assert.That(deleteResponse.Content, Is.EqualTo(ExpectedSuccessResponseBody));
             });
         }
 
@@ -52,7 +52,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             {
                 Assertations.AssertContentTypeIsApplicationJson(deleteResponse);
                 Assertations.AssertSuccessfulStatusCode(deleteResponse);
-                Assert.AreEqual(ExpectedSuccessResponseBody, deleteResponse.Content);
+                Assert.That(deleteResponse.Content, Is.EqualTo(ExpectedSuccessResponseBody));
             });
         }
 
@@ -69,10 +69,10 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             //Assert
             Assert.Multiple(() =>
             {
-                Assert.AreEqual("application/problem+json", Response.ContentType);
+                Assert.That(Response.ContentType, Is.EqualTo("application/problem+json"));
                 Assertations.AssertBadRequestStatusCode(Response);
                 Assertations.AssertJsonSchema(Response, ResponseJsonSchemas.DeleteUserBadRequest());
-                Assert.IsTrue(Response.Content.Contains(expectedBodyErrorMessage), $"Expected Response to contain {expectedBodyErrorMessage}, but was {Response.Content}");
+                Assert.That(Response.Content, Does.Contain(expectedBodyErrorMessage), $"Expected Response to contain {expectedBodyErrorMessage}, but was {Response.Content}");
             });
         }
     }

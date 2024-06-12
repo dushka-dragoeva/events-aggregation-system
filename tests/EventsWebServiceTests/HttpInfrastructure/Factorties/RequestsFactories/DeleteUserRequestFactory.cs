@@ -1,5 +1,4 @@
-﻿using EventsWebServiceTests.Configuration;
-using EventsWebServiceTests.Utils;
+﻿using EventsWebServiceTests.Utils;
 using RestSharp;
 
 namespace EventsWebServiceTests.HttpInfrastructure.Factorties.RequestsFactories

@@ -8,7 +8,7 @@ namespace EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories
         public static UserLogoutDto BuildValidDto() => new UserLogoutDto()
         {
             Date = DateTime.UtcNow,
-            Email = $"Test{RandamGenerator.GenerateRandomString()}@gmail.com",
+            Email = $"Test{RandamGenerator.GenerateString()}@gmail.com",
         };
     }
 }

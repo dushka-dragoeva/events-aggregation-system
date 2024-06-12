@@ -1,5 +1,7 @@
 ﻿using EventsWebServiceTests.Database.Repositories;
 using EventsWebServiceTests.Database.Repositories.Contracts;
+using EventsWebServiceTests.Utils;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -28,8 +30,8 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
             ConnectionFactory = new ConnectionFactory()
             {
                 HostName = "localhost",
-                UserName = "guest",
-                Password = "guest",
+                UserName = ConfigurationReader.GetConfigurationValue("RabbitMq:username"),
+                Password = ConfigurationReader.GetConfigurationValue("RabbitMq:password"),
                 VirtualHost = "/",
                 Port = 5672,
                 RequestedHeartbeat = TimeSpan.FromSeconds(30)

@@ -1,5 +1,4 @@
-﻿using EventsWebServiceTests.Configuration;
-using EventsWebServiceTests.Infrastructure.Dtos;
+﻿using EventsWebServiceTests.Infrastructure.Dtos;
 using EventsWebServiceTests.Utils;
 using RestSharp;
 

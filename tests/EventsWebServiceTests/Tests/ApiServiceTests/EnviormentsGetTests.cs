@@ -1,13 +1,13 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure;
-using EventsWebServiceTests.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
+using EventsWebServiceTests.Utils;
 
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
-    internal class GetEnviormentsTests : BaseTest
+    internal class EnviormentsGetTests : BaseTest
     {
         [Test]
         public async Task CorrectEnviormentsWasReturned_When_GetAllEnviorments()
@@ -25,7 +25,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             Assert.Multiple(() =>
             {
                 Assertations.AssertContentTypeIsApplicationJson(getResponse);
-                Assert.AreEqual(JsonConvert.SerializeObject(expectedEnviorments), getResponse.Content);
+                Assert.That(getResponse.Content, Is.EqualTo(JsonConvert.SerializeObject(expectedEnviorments)));
             });
         }
     }

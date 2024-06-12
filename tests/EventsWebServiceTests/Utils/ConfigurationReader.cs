@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
-using EventsWebServiceTests.Utils;
 
-namespace EventsWebServiceTests.Configuration
+namespace EventsWebServiceTests.Utils
 {
     internal static class ConfigurationReader
     {
@@ -24,7 +23,14 @@ namespace EventsWebServiceTests.Configuration
         {
             IConfigurationRoot configuration = GetConfiguration();
 
-            return configuration[name];
+            var configurationValue = configuration[name];
+
+            if (configurationValue == null)
+            {
+                throw new ArgumentException($"Configuration value for '{name}' is missing or null.");
+            }
+
+            return configurationValue;
         }
 
         private static IConfigurationRoot GetConfiguration()
