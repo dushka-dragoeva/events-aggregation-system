@@ -27,13 +27,13 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             var deleteRequest = _deleteUserRequestFactory.BuildRequest(validEmail);
 
             // Act
-            RestResponse deleteResponse = await RestClient.ExecuteAsync(deleteRequest);
+            Response = await RestClient.ExecuteAsync(deleteRequest);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assertations.AssertContentTypeIsApplicationJson(deleteResponse);
-                Assert.That(deleteResponse.Content, Is.EqualTo(ExpectedSuccessResponseBody));
+                Assertations.AssertContentTypeIsApplicationJson(Response);
+                Assert.That(Response.Content, Is.EqualTo(ExpectedSuccessResponseBody));
             });
         }
 
@@ -45,14 +45,14 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             var deleteRequest = _deleteUserRequestFactory.BuildRequest(invalidEmail);
 
             // Act
-            RestResponse deleteResponse = await RestClient.ExecuteAsync(deleteRequest);
+            Response = await RestClient.ExecuteAsync(deleteRequest);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assertations.AssertContentTypeIsApplicationJson(deleteResponse);
-                Assertations.AssertSuccessfulStatusCode(deleteResponse);
-                Assert.That(deleteResponse.Content, Is.EqualTo(ExpectedSuccessResponseBody));
+                Assertations.AssertContentTypeIsApplicationJson(Response);
+                Assertations.AssertSuccessfulStatusCode(Response);
+                Assert.That(Response.Content, Is.EqualTo(ExpectedSuccessResponseBody));
             });
         }
 
@@ -72,7 +72,8 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
                 Assert.That(Response.ContentType, Is.EqualTo("application/problem+json"));
                 Assertations.AssertBadRequestStatusCode(Response);
                 Assertations.AssertJsonSchema(Response, ResponseJsonSchemas.DeleteUserBadRequest());
-                Assert.That(Response.Content, Does.Contain(expectedBodyErrorMessage), $"Expected Response to contain {expectedBodyErrorMessage}, but was {Response.Content}");
+                Assert.That(Response.Content, Does.Contain(expectedBodyErrorMessage),
+                    $"Expected Response to contain {expectedBodyErrorMessage}, but was {Response.Content}");
             });
         }
     }

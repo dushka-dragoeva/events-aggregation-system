@@ -14,18 +14,17 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             // Arrange
             var expectedEnviorments = EnviormentsDtoFactory.BuildExpectedEnvironmentResponseDto();
-
             var url = $"{ConfigurationReader.GetApplicationUrl()}/environment";
             var getRequest = new RestRequest(url, Method.Get);
 
             // Act
-            RestResponse getResponse = await RestClient.ExecuteAsync(getRequest);
+            Response = await RestClient.ExecuteAsync(getRequest);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assertations.AssertContentTypeIsApplicationJson(getResponse);
-                Assert.That(getResponse.Content, Is.EqualTo(JsonConvert.SerializeObject(expectedEnviorments)));
+                Assertations.AssertContentTypeIsApplicationJson(Response);
+                Assert.That(Response.Content, Is.EqualTo(JsonConvert.SerializeObject(expectedEnviorments)));
             });
         }
     }

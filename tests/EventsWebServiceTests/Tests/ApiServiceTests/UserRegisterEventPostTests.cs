@@ -1,7 +1,6 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
 using EventsWebServiceTests.Infrastructure.Dtos;
-using EventsWebServiceTests.Utils;
 using System.Net;
 
 namespace EventsWebServiceTests.Tests.ApiServiceTests
@@ -139,6 +138,5 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
                         $"Expected Statuc Code to be {HttpStatusCode.UnsupportedMediaType}, but was {Response.StatusCode}");
                 });
         }
-
     }
 }
