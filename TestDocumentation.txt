@@ -1,0 +1,33 @@
+############## EVENTS AGGREGATION SYSTEM TESTS#######################
+
+Test Scope:
+	- Routs
+		- GET /environment 
+		- POST /events
+			- FileDownload - including data validation scenarios
+			- UserLogin - only happy path
+			- UserLogout - only happy path
+			- UserRegistered -including data validation scenarios
+			* Includes When event type is UserRegistered - if the user is already existing in User table, 
+			  no action is taken scenario.
+			- ProductInstalled - only happy path
+			- ProductUninstalled - only happy path
+		- DELETE /Users 
+		* Includs When special type UserDelete is processed the service must delete all rows from all tables 
+		  that contain the provided email scenario
+			
+	- Message Queue Interaction - All routs are tested
+	
+Technology Stack: NUnit RestSharp, EntityFramework, NutonSoft, RabbitMq
+
+Design Patterns:
+	- Repository Pattern is implemented for database interaction
+	- Abstract Factory for Events to hold comment methods for differtnt types of events
+	- Factory Method for building test data
+	- Triple A for tests design
+	
+			
+
+			
+		
+ 
