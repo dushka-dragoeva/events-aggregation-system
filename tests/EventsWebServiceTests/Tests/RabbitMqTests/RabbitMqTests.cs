@@ -33,15 +33,14 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
             FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
             Request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
             _expectedMessage = JsonConvert.SerializeObject(MesageModelsFactory.BuildFileDownloadEventMessage(FileDownloadDto));
-            _expectedEvent = EventFactory.BuildDefaultFileDounloadEvent(FileDownloadDto) as FileDownloadEvent;
+            _expectedEvent = EventFactory.BuildExpextedFileDounloadEvent(FileDownloadDto) as FileDownloadEvent;
             string consumerTag = Channel.BasicConsume(QueueName, false, Consumer);
 
             // Act
             Response = await RestClient.ExecuteAsync(Request);
             Channel.BasicConsume(queue: QueueName, autoAck: true, consumer: Consumer);
 
-            // Wait a bit for the to record to be saved to DB
-            Thread.Sleep(100);
+            WaitDatabaseToBeUpdated();
             _actualEvent = await FileDownloadEventRepository.GetByEventIdAcync(FileDownloadDto.Id) as FileDownloadEvent;
 
             //Assert
@@ -62,15 +61,14 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
             UserLoginDto = UserLoginEventDtoFactory.BuildValidDto();
             Request = UserLoginRequestFactory.BuildValidRequest(UserLoginDto);
             _expectedMessage = JsonConvert.SerializeObject(MesageModelsFactory.BuildUserLoginEventMessage(UserLoginDto));
-            _expectedEvent = EventFactory.BuildDefaultUserLoginEvent(UserLoginDto) as UserLoginEvent;
+            _expectedEvent = EventFactory.BuildExpectedUserLoginEvent(UserLoginDto) as UserLoginEvent;
             string consumerTag = Channel.BasicConsume(QueueName, false, Consumer);
 
             // Act
             Response = await RestClient.ExecuteAsync(Request);
             Channel.BasicConsume(queue: QueueName, autoAck: true, consumer: Consumer);
 
-            // Wait a bit the to record to be saved to DB
-            Thread.Sleep(100);
+            WaitDatabaseToBeUpdated();
             _actualEvent = await UserLoginEventRepository.GetByUserIdAcync(UserLoginDto.UserId) as UserLoginEvent;
 
             //Assert
@@ -90,15 +88,14 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
             UserLogoutDto = UserLogoutEventDtoFactory.BuildValidDto();
             Request = UserLogoutRequestFactory.BuildValidRequest(UserLogoutDto);
             _expectedMessage = JsonConvert.SerializeObject(MesageModelsFactory.BuildUserLogoutEventMessage(UserLogoutDto));
-            _expectedEvent = EventFactory.BuildDefaultUserLogoutEvent(UserLogoutDto) as UserLogOutEvent;
+            _expectedEvent = EventFactory.BuildExpectedUserLogoutEvent(UserLogoutDto) as UserLogOutEvent;
             string consumerTag = Channel.BasicConsume(QueueName, false, Consumer);
 
             // Act
             Response = await RestClient.ExecuteAsync(Request);
             Channel.BasicConsume(queue: QueueName, autoAck: true, consumer: Consumer);
 
-            // Wait a bit the to record to be saved to DB
-            Thread.Sleep(100);
+            WaitDatabaseToBeUpdated();
             _actualEvent = await UserLogoutEventRepository.GetByEmailAcync(UserLogoutDto.Email) as UserLogOutEvent;
 
             Assert.Multiple(() =>
@@ -116,15 +113,14 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
             UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
             Request = UserRegisteredRequestFactory.BuildValidRequest(UserRegisteredDto);
             _expectedMessage = JsonConvert.SerializeObject(MesageModelsFactory.BuildUserRegisteredEventMessage(UserRegisteredDto));
-            _expectedEvent = EventFactory.BuildDefaultUserRegisteredEvent(UserRegisteredDto) as User;
+            _expectedEvent = EventFactory.BuildExpectedUserRegisteredEvent(UserRegisteredDto) as User;
             string consumerTag = Channel.BasicConsume(QueueName, false, Consumer);
 
             // Act
             Response = await RestClient.ExecuteAsync(Request);
             Channel.BasicConsume(queue: QueueName, autoAck: true, consumer: Consumer);
 
-            // Wait a bit the to record to be saved to DB
-            Thread.Sleep(100);
+            WaitDatabaseToBeUpdated();
             _actualEvent = await UserRepository.GetByEmailAcync(UserRegisteredDto.Email) as User;
 
             Assert.Multiple(() =>
@@ -143,15 +139,14 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
             ProductActionDto = ProductActionEventDtoFactory.BuildValidDto();
             Request = ProductActionRequestFactory.BuildValidRequest(ProductActionDto, EventType.ProductInstalled);
             _expectedMessage = JsonConvert.SerializeObject(MesageModelsFactory.BuildProductInstalledEventMessage(ProductActionDto));
-            _expectedEvent = EventFactory.BuildDefaultProductActionEvent(ProductActionDto) as ProductActionTraking;
+            _expectedEvent = EventFactory.BuildExpectedProductActionEvent(ProductActionDto) as ProductActionTraking;
             string consumerTag = Channel.BasicConsume(QueueName, false, Consumer);
 
             // Act
             Response = await RestClient.ExecuteAsync(Request);
             Channel.BasicConsume(queue: QueueName, autoAck: true, consumer: Consumer);
 
-            // Wait a bit the to record to be saved to DB
-            Thread.Sleep(100);
+            WaitDatabaseToBeUpdated();
             _actualEvent = await ProductActionTrakingRepository.GetByUserIdAcync(ProductActionDto.UserId) as ProductActionTraking;
 
             Assert.Multiple(() =>
@@ -172,15 +167,14 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
             ProductActionDto = ProductActionEventDtoFactory.BuildValidDto();
             Request = ProductActionRequestFactory.BuildValidRequest(ProductActionDto, EventType.ProductUninstalled);
             _expectedMessage = JsonConvert.SerializeObject(MesageModelsFactory.BuildProductUninstalledEventMessage(ProductActionDto));
-            _expectedEvent = EventFactory.BuildDefaultProductActionEvent(ProductActionDto) as ProductActionTraking;
+            _expectedEvent = EventFactory.BuildExpectedProductActionEvent(ProductActionDto) as ProductActionTraking;
             string consumerTag = Channel.BasicConsume(QueueName, false, Consumer);
 
             // Act
             Response = await RestClient.ExecuteAsync(Request);
             Channel.BasicConsume(queue: QueueName, autoAck: true, consumer: Consumer);
 
-            // Wait a bit the to record to be saved to DB
-            Thread.Sleep(100);
+            WaitDatabaseToBeUpdated();
             _actualEvent = await ProductActionTrakingRepository.GetByUserIdAcync(ProductActionDto.UserId) as ProductActionTraking;
 
             Assert.Multiple(() =>
@@ -202,22 +196,27 @@ namespace EventsWebServiceTests.Tests.RabbitMqTests
                 switch (type)
                 {
                     case Type t when t == typeof(FileDownloadEvent):
+                        WaitDatabaseToBeUpdated();
                         await FileDownloadEventRepository.DeleteAsync(_actualEvent.Id);
                         break;
 
                     case Type t when t == typeof(UserLoginEvent):
+                        WaitDatabaseToBeUpdated();
                         await UserLoginEventRepository.DeleteAsync(_actualEvent.Id);
                         break;
 
                     case Type t when t == typeof(UserLogOutEvent):
-                        await UserLoginEventRepository.DeleteAsync(_actualEvent.Id);
+                        WaitDatabaseToBeUpdated();
+                        await UserLogoutEventRepository.DeleteAsync(_actualEvent.Id);
                         break;
 
                     case Type t when t == typeof(User):
+                        WaitDatabaseToBeUpdated();
                         await UserRepository.DeleteAsync(_actualEvent.Id);
                         break;
 
                     case Type t when t == typeof(ProductActionTraking):
+                        WaitDatabaseToBeUpdated();
                         await ProductActionTrakingRepository.DeleteAsync(_actualEvent.Id);
                         break;
 

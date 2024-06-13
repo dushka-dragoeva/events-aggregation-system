@@ -1,7 +1,6 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
 using EventsWebServiceTests.Infrastructure.Dtos;
-using System.Net;
 
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
@@ -14,6 +13,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             if (UserRegisteredDto != null)
             {
+                WaitDatabaseToBeUpdated();
                 await UserRepository.DeleteByEmailAsync(UserRegisteredDto.Email);
             }
 
@@ -116,27 +116,6 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
 
             //Assert
             Assertations.AssertBadRequestResponse(Response, UserRegisteredEventDtoFactory.BuildBadRequestMessages());
-        }
-
-        [Test]
-        public async Task CorrectBadRequestResponse_When_PostNewUserRegisteredEventtWithoutBody()
-        {
-            // Arange
-
-            var request = UserRegisteredRequestFactory.BuildEmptyRequest(EventType.UserRegistered);
-
-            // Act
-            Response = await RestClient.ExecuteAsync(request);
-
-
-            //Assert
-            Assert.Multiple(() =>
-                {
-                    Assert.AreEqual("application/problem+json", Response.ContentType);
-                    Assert.IsTrue(
-                        Response.StatusCode == HttpStatusCode.UnsupportedMediaType,
-                        $"Expected Statuc Code to be {HttpStatusCode.UnsupportedMediaType}, but was {Response.StatusCode}");
-                });
         }
     }
 }

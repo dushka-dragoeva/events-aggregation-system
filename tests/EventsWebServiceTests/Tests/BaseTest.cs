@@ -97,4 +97,9 @@ public class BaseTest
         UserLogoutEventRepository.Dispose();
         ProductActionTrakingRepository.Dispose();
     }
+
+    protected void WaitDatabaseToBeUpdated(int milliseconds = 100)
+    {
+        Thread.Sleep(milliseconds);
+    }
 }

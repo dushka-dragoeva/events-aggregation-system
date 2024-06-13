@@ -14,6 +14,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             if (UserRegisteredDto != null)
             {
+                WaitDatabaseToBeUpdated();
                 await UserRepository.DeleteByEmailAsync(UserRegisteredDto.Email);
             }
 

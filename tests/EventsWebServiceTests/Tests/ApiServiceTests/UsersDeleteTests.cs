@@ -117,6 +117,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
 
         private async Task AssertCorrectUserDataIsDeleted()
         {
+            WaitDatabaseToBeUpdated();
             _createdUser = await UserRepository.GetByEmailAcync(_user.UserEmail);
             _createdUserLoginEvent = await UserLoginEventRepository.GetByUserIdAcync(_userLoginEvent.UserId);
             _createdUserLogoutEvent = await UserLogoutEventRepository.GetByEmailAcync(_userLoginEvent.Email);

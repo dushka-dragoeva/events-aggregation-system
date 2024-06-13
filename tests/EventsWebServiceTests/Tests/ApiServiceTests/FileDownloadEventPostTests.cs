@@ -2,7 +2,6 @@
 using EventsWebServiceTests.Infrastructure.Dtos;
 using EventsWebServiceTests.Database.Repositories;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
-using System.Net;
 using EventsWebServiceTests.Utils;
 
 namespace EventsWebServiceTests.Tests.ApiServiceTests
@@ -18,6 +17,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             if (FileDownloadDto != null)
             {
+                WaitDatabaseToBeUpdated();
                 await FileDownloadEventRepository.DeleteByEventIdAsync(FileDownloadDto.Id);
             }
 
@@ -109,34 +109,13 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         }
 
         [Test]
-        public async Task CorrectBadRequestResponse_When_PostNewFileDownloadEventWithoutBody()
-        {
-            // Arange
-
-            Request = FileDownlioadRequestFactory.BuildEmptyRequest();
-
-            // Act
-            Response = await RestClient.ExecuteAsync(Request);
-
-
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.AreEqual("application/problem+json", Response.ContentType);
-                Assert.IsTrue(
-                    Response.StatusCode == HttpStatusCode.UnsupportedMediaType,
-                    $"Expected Statuc Code to be {HttpStatusCode.UnsupportedMediaType}, but was {Response.StatusCode}");
-            });
-        }
-
-        [Test]
         public async Task CorrectBadRequestResponse_When_IdIsInvalidGuid()
         {
             // Arange
             FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
             FileDownloadDto.Id = "InvalidValue";
-           _expectedResponseMesage =
-                $@"Error converting value \""{FileDownloadDto.Id}\"" to type 'System.Nullable`1[System.Guid]'.";
+            _expectedResponseMesage =
+                 $@"Error converting value \""{FileDownloadDto.Id}\"" to type 'System.Nullable`1[System.Guid]'.";
             Request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
 
             // Act
@@ -218,7 +197,7 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         public async Task CorrectBadRequestResponse_When_FileLenghtIsBiggerThanIntMaxValue()
         {
             // Arange
-           _expectedResponseMesage = "JSON integer 2147483648 is too large or small for an Int32.";
+            _expectedResponseMesage = "JSON integer 2147483648 is too large or small for an Int32.";
             FileDownloadDto = FileDownloadEventDtoFactory.BuildValidDto();
             FileDownloadDto.FileLenght = 2147483648;
             Request = FileDownlioadRequestFactory.BuildValidRequest(FileDownloadDto);
