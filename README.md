@@ -41,8 +41,8 @@ There is addtitional queue - eventsQueue.tests - which also receives the same me
 
 Running the Tests:
 
-   -Follow the above instructions to setup the environment.
-  - Run Web api executing - dotnet run in src\EventsWebService folder
-  - Run tests from Visual Studio
-  - More details for tests can be found in TestDocumentation.txt
+   - Follow the above instructions to setup the environment.
+  1. Run Web api executing - dotnet run in src\EventsWebService folder
+  1. Run tests from Visual Studio
+  1. More details for tests can be found in TestDocumentation.txt
   
