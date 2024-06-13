@@ -38,3 +38,11 @@ Running the services:
 There is addtitional queue - eventsQueue.tests - which also receives the same messages, but they are not consumed, it is to be used in tests for validations of the features in the web api.
 
 - More details can be found in - SystemDocumentation.txt
+
+Running the Tests:
+
+   -Follow the above instructions to setup the environment.
+  - Run Web api executing - dotnet run in src\EventsWebService folder
+  - Run tests from Visual Studio
+  - More details for tests can be found in TestDocumentation.txt
+  
