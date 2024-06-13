@@ -8,7 +8,7 @@ using RestSharp;
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
-    internal class UsersDeleteTests : BaseTest
+    public class UsersDeleteTests : BaseTest
     {
         private const string ExpectedSuccessResponseBody = @"{""status"":""User data deleted successfully""}";
         private DeleteUserRequestFactory _deleteUserRequestFactory;

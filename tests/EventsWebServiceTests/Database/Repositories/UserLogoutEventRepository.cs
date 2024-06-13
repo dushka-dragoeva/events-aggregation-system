@@ -16,20 +16,18 @@ namespace EventsWebServiceTests.Database.Repositories
 
         public async Task<UserLogOutEvent> GetByEmailAcync(string email)
         {
-            UserLogOutEvent userLogoutEvent = GetAllAsync()
-              .Result
-              .Where(x => x.Email == email)
-              .FirstOrDefault();
+            IEnumerable<UserLogOutEvent> userLogoutEvents = await GetAllAsync();
+            UserLogOutEvent userLogoutEvent = userLogoutEvents.FirstOrDefault(x => x.Email == email);
 
             return userLogoutEvent;
         }
 
         public async Task DeleteByEmailAsync(string email)
         {
-            var  userLogoutEvent = GetByEmailAcync(email).Result;
-            if ( userLogoutEvent != null)
+            var userLogoutEvent = GetByEmailAcync(email).Result;
+            if (userLogoutEvent != null)
             {
-                await DeleteAsync( userLogoutEvent.Id);
+                await DeleteAsync(userLogoutEvent.Id);
             }
         }
     }

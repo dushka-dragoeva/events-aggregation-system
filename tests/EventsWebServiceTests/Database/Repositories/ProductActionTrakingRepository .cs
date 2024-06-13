@@ -16,8 +16,8 @@ namespace EventsWebServiceTests.Database.Repositories
 
         public async Task<ProductActionTraking> GetByUserIdAcync(string userId)
         {
-            var products = await GetAllAsync();
-            ProductActionTraking? productAction = products.FirstOrDefault(x => x.UserId == userId);
+            IEnumerable<ProductActionTraking> products = await GetAllAsync();
+            ProductActionTraking productAction = products.FirstOrDefault(x => x.UserId == userId);
 
             return productAction;
         }

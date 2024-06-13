@@ -7,7 +7,7 @@ using EventsWebServiceTests.Utils;
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
-    internal class FileDownloadEventPostTests : BaseTest
+    public class FileDownloadEventPostTests : BaseTest
     {
         const string ExpectedErrorContentMessage = "The content field is required.";
         private string _expectedResponseMesage;

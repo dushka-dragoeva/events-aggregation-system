@@ -98,7 +98,7 @@ public class BaseTest
         ProductActionTrakingRepository.Dispose();
     }
 
-    protected void WaitDatabaseToBeUpdated(int milliseconds = 100)
+    protected void WaitDatabaseToBeUpdated(int milliseconds = 50)
     {
         Thread.Sleep(milliseconds);
     }

@@ -7,7 +7,7 @@ using EventsWebServiceTests.Utils;
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
     [TestFixture]
-    internal class EnviormentsGetTests : BaseTest
+    public class EnviormentsGetTests : BaseTest
     {
         [Test]
         public async Task CorrectEnviormentsWasReturned_When_GetAllEnviorments()

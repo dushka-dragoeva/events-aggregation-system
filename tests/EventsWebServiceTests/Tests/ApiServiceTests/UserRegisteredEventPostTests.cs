@@ -1,12 +1,15 @@
 ﻿using EventsWebServiceTests.ApiInfrastructure;
+using EventsWebServiceTests.Database.Models;
+using EventsWebServiceTests.Database.Repositories;
 using EventsWebServiceTests.HttpInfrastructure.Factorties.DtoFactories;
 using EventsWebServiceTests.Infrastructure.Dtos;
 
 namespace EventsWebServiceTests.Tests.ApiServiceTests
 {
-    public class UserRegisterEventPostTests : BaseTest
+    public class UserRegisteredEventPostTests : BaseTest
     {
         const string ExpectedErrorContentMessage = "The content field is required.";
+        private User _createdUser;
 
         [TearDown]
         public new async Task TestCleanup()
@@ -20,19 +23,38 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
             base.TestCleanup();
         }
 
-
         [Test]
         public async Task EventIsPostedSuccessfully_When_PostNewUserRegisteredEventWithAllProperties()
         {
             // Arange
             UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
-            var request = UserRegisteredRequestFactory.BuildValidRequest(UserRegisteredDto);
+            Request = UserRegisteredRequestFactory.BuildValidRequest(UserRegisteredDto);
 
             // Act
-            Response = await RestClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(Request);
 
             //Assert
             Assertations.AssertEventIsPostedSuccessfully(Response);
+        }
+
+        [Test]
+        public async Task DataBaseRecordIsnotUpdated_When_PostExistingUserRegisteredEvent()
+        {
+            // Arange
+            UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
+            Request = UserRegisteredRequestFactory.BuildValidRequest(UserRegisteredDto);
+
+            // Act
+            await RestClient.ExecuteAsync(Request);
+            await ValidateUserIsCreated();
+            await RestClient.ExecuteAsync(Request);
+
+            WaitDatabaseToBeUpdated();
+            var allUsers = await UserRepository.GetAllAsync();
+            var sameUsers = allUsers.Where(x => x.UserEmail == UserRegisteredDto.Email);
+
+            //Assert
+            Assert.AreEqual(1, sameUsers.Count());
         }
 
         [Test]
@@ -40,10 +62,10 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             // Arange
             UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
-            var request = UserRegisteredRequestFactory.BuildRequestWithMissingFirstName(UserRegisteredDto);
+            Request = UserRegisteredRequestFactory.BuildRequestWithMissingFirstName(UserRegisteredDto);
 
             // Act
-            Response = await RestClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(Request);
 
             //Assert
             Assertations.AssertBadRequestResponse(Response, "FirstName is required.");
@@ -54,10 +76,10 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             // Arange
             UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
-            var request = UserRegisteredRequestFactory.BuildRequestWithMissingLastName(UserRegisteredDto);
+            Request = UserRegisteredRequestFactory.BuildRequestWithMissingLastName(UserRegisteredDto);
 
             // Act
-            Response = await RestClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(Request);
 
             //Assert
             Assertations.AssertBadRequestResponse(Response, "LastName is required.");
@@ -68,10 +90,10 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             // Arange
             UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
-            var request = UserRegisteredRequestFactory.BuildRequestWithMissingEmail(UserRegisteredDto);
+            Request = UserRegisteredRequestFactory.BuildRequestWithMissingEmail(UserRegisteredDto);
 
             // Act
-            Response = await RestClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(Request);
 
             //Assert
             Assertations.AssertBadRequestResponse(Response, "Email is required.", "Incorrect email format");
@@ -82,10 +104,10 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             // Arange
             UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
-            var request = UserRegisteredRequestFactory.BuildRequestWithMissingCompany(UserRegisteredDto);
+            Request = UserRegisteredRequestFactory.BuildRequestWithMissingCompany(UserRegisteredDto);
 
             // Act
-            Response = await RestClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(Request);
 
             //Assert
             Assertations.AssertBadRequestResponse(Response, "Company is required.", "Incorrect Company format.");
@@ -96,10 +118,10 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         {
             // Arange
             UserRegisteredDto = UserRegisteredEventDtoFactory.BuildValidDto();
-            var request = UserRegisteredRequestFactory.BuildRequestWithMissingPhone(UserRegisteredDto);
+            Request = UserRegisteredRequestFactory.BuildRequestWithMissingPhone(UserRegisteredDto);
 
             // Act
-            Response = await RestClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(Request);
 
             //Assert
             Assertations.AssertBadRequestResponse(Response, "Phone is required.", "Incorrect Phone format.");
@@ -109,13 +131,21 @@ namespace EventsWebServiceTests.Tests.ApiServiceTests
         public async Task CorrectBadRequestResponse_When_PostPostNewUserRegisteredEventWithEmptyBody()
         {
             // Arange
-            var request = UserRegisteredRequestFactory.BuildRequestWithEmptyBody(EventType.UserRegistered);
+            Request = UserRegisteredRequestFactory.BuildRequestWithEmptyBody(EventType.UserRegistered);
 
             // Act
-            Response = await RestClient.ExecuteAsync(request);
+            Response = await RestClient.ExecuteAsync(Request);
 
             //Assert
             Assertations.AssertBadRequestResponse(Response, UserRegisteredEventDtoFactory.BuildBadRequestMessages());
+        }
+
+
+        private async Task ValidateUserIsCreated()
+        {
+            WaitDatabaseToBeUpdated();
+            _createdUser = await UserRepository.GetByEmailAcync(UserRegisteredDto.Email);
+            Assert.IsNotNull(_createdUser);
         }
     }
 }

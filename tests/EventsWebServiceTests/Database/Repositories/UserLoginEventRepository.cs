@@ -16,10 +16,8 @@ namespace EventsWebServiceTests.Database.Repositories
 
         public async Task<UserLoginEvent> GetByUserIdAcync(string userId)
         {
-            UserLoginEvent userLoginEvent = GetAllAsync()
-              .Result
-              .Where(x => x.UserId == userId)
-              .FirstOrDefault();
+            IEnumerable<UserLoginEvent> userLoginEvents = await GetAllAsync();
+            UserLoginEvent userLoginEvent = userLoginEvents.FirstOrDefault(x => x.UserId == userId);
 
             return userLoginEvent;
         }
